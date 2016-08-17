@@ -1,0 +1,45 @@
+﻿<Window x:Class="FifthSemester.CompanyMainProjectDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Name="CompanyDialogWindow" Height="400" Width="600" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+            <RowDefinition Height="35"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="110"/>
+        </Grid.ColumnDefinitions>
+
+        <GroupBox Header="Search for Company by name">
+            <TextBox Name="txtBxSearchCompanies" Height="25" TextChanged="SearchTextChanged"/>
+        </GroupBox>
+
+        <GroupBox Header="Companies" Grid.Row="1" Grid.ColumnSpan="3">
+            <DataGrid Name="CompaniesDG" AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" AlternatingRowBackground="lightGray" AlternationCount="2">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding name}"/>
+                    <DataGridTextColumn Header="Address" Binding="{Binding address}"/>
+                    <DataGridTextColumn Header="Zipcode" Binding="{Binding zipcode}"/>
+                    <DataGridTextColumn Header="Phone" Binding="{Binding phone}"/>
+
+                    <DataGridTextColumn Header="Website" Binding="{Binding website}"></DataGridTextColumn>
+
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Visit" Name="btnVisit" Click="btnVisit_Click"></Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+        
+        <Button Name="btnCancel" Content="Cancel" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Width="100" Margin="5" Click="btnCancel_Click"></Button>
+        <Button Name="btnSelect" Content="Select" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right" Width="100" Margin="5" Click="btnSelect_Click"></Button>
+    </Grid>
+</Window>

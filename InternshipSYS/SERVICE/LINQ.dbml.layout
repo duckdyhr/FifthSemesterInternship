@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="LINQ">
+  <DataContextMoniker Name="/LINQDataContext" />
+  <nestedChildShapes>
+    <classShape Id="448305a5-83a2-4ab8-bfb2-8ab54d06b720" absoluteBounds="5.25, 2.75, 2, 2.1554996744791666">
+      <DataClassMoniker Name="/LINQDataContext/Company" />
+      <nestedChildShapes>
+        <elementListCompartment Id="c09ecead-aa12-4bdb-a860-5aaf88f8ddc5" absoluteBounds="5.265, 3.21, 1.9700000000000002, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="59fa39cf-ea7e-4239-b0f5-71f2b9a59265" absoluteBounds="5.125, 5.25, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/LINQDataContext/Contact" />
+      <nestedChildShapes>
+        <elementListCompartment Id="832eb75e-b29d-4c47-ae1e-5111934e3998" absoluteBounds="5.14, 5.71, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(6.40625 : 4.90549967447917); (6.40625 : 5.25)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/LINQDataContext/Company/Company_Contact" />
+      <nodes>
+        <classShapeMoniker Id="448305a5-83a2-4ab8-bfb2-8ab54d06b720" />
+        <classShapeMoniker Id="59fa39cf-ea7e-4239-b0f5-71f2b9a59265" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="44484813-027d-48a1-b155-f5ca6028eb9e" absoluteBounds="5.25, 0.5, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/LINQDataContext/Supervisor" />
+      <nestedChildShapes>
+        <elementListCompartment Id="259e0e89-50c4-4a55-81fe-36f3944a93a2" absoluteBounds="5.265, 0.96, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="f17fb8de-69bc-4b2e-8d84-38ac336017d9" absoluteBounds="2.875, 5.25, 2, 1.0016910807291668">
+      <DataClassMoniker Name="/LINQDataContext/Year" />
+      <nestedChildShapes>
+        <elementListCompartment Id="10e16ab4-e940-4a31-8bfe-0773d0641c34" absoluteBounds="2.8900000000000006, 5.71, 1.9700000000000002, 0.44169108072916669" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="e98e74ad-bfca-4bc5-9903-cc82c1ce14e3" absoluteBounds="7.75, 3.75, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/LINQDataContext/Offering" />
+      <nestedChildShapes>
+        <elementListCompartment Id="a62d242d-f6b0-4379-b297-017be9973718" absoluteBounds="7.765, 4.21, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(7.25 : 4.32774983723958); (7.75 : 4.32774983723958)]" manuallyRouted="true" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/LINQDataContext/Company/Company_Offering" />
+      <nodes>
+        <classShapeMoniker Id="448305a5-83a2-4ab8-bfb2-8ab54d06b720" />
+        <classShapeMoniker Id="e98e74ad-bfca-4bc5-9903-cc82c1ce14e3" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="629aa51b-ebba-4217-bb1d-b3f30ce0e58a" absoluteBounds="7.75, 0.875, 2, 2.3478011067708335">
+      <DataClassMoniker Name="/LINQDataContext/MainProject" />
+      <nestedChildShapes>
+        <elementListCompartment Id="13ad0cde-883e-424c-854a-cc794aba0d14" absoluteBounds="7.7650000000000006, 1.335, 1.9700000000000002, 1.7878011067708335" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(7.25 : 2.98640055338542); (7.75 : 2.98640055338542)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/LINQDataContext/Company/Company_MainProject" />
+      <nodes>
+        <classShapeMoniker Id="448305a5-83a2-4ab8-bfb2-8ab54d06b720" />
+        <classShapeMoniker Id="629aa51b-ebba-4217-bb1d-b3f30ce0e58a" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(7.25 : 1.57294840494792); (7.75 : 1.57294840494792)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/LINQDataContext/Supervisor/Supervisor_MainProject" />
+      <nodes>
+        <classShapeMoniker Id="44484813-027d-48a1-b155-f5ca6028eb9e" />
+        <classShapeMoniker Id="629aa51b-ebba-4217-bb1d-b3f30ce0e58a" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="36ce74a9-50a6-4a86-876e-a85f562f893c" absoluteBounds="2.875, 0.5, 2, 3.8862125651041666">
+      <DataClassMoniker Name="/LINQDataContext/Student" />
+      <nestedChildShapes>
+        <elementListCompartment Id="339dbeda-ad0e-4f24-85ee-6ad47020c5cb" absoluteBounds="2.89, 0.96, 1.9700000000000002, 3.3262125651041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(5.25 : 3.56810628255208); (4.875 : 3.56810628255208)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/LINQDataContext/Company/Company_Student" />
+      <nodes>
+        <classShapeMoniker Id="448305a5-83a2-4ab8-bfb2-8ab54d06b720" />
+        <classShapeMoniker Id="36ce74a9-50a6-4a86-876e-a85f562f893c" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(5.25 : 1.38544840494792); (4.875 : 1.38544840494792)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/LINQDataContext/Supervisor/Supervisor_Student" />
+      <nodes>
+        <classShapeMoniker Id="44484813-027d-48a1-b155-f5ca6028eb9e" />
+        <classShapeMoniker Id="36ce74a9-50a6-4a86-876e-a85f562f893c" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>
