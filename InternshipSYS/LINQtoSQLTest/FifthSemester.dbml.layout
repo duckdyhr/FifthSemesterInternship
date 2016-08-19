@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="FifthSemester">
+  <DataContextMoniker Name="/FifthSemesterDataContext" />
+  <nestedChildShapes>
+    <classShape Id="65f23c7f-ce1d-4f22-8057-02bcc42e86e5" absoluteBounds="0.5, 0.5, 2.5, 2.1554996744791666">
+      <DataClassMoniker Name="/FifthSemesterDataContext/Company" />
+      <nestedChildShapes>
+        <elementListCompartment Id="efd60857-07df-4718-9d01-0b486d81d482" absoluteBounds="0.515, 0.96, 2.4699999999999998, 1.5954996744791665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="b1efe76f-891f-4997-be2e-8b03d65c9639" absoluteBounds="2.875, 2.875, 2, 4.0785139973958326">
+      <DataClassMoniker Name="/FifthSemesterDataContext/Student" />
+      <nestedChildShapes>
+        <elementListCompartment Id="db91fe7e-ba8d-4f42-bad7-bc31d8777b5b" absoluteBounds="2.89, 3.335, 1.9700000000000002, 3.518513997395833" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(3 : 1.57774983723958); (3.9375005 : 1.57774983723958); (3.9375005 : 2.875)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/FifthSemesterDataContext/Company/Company_Student" />
+      <nodes>
+        <classShapeMoniker Id="65f23c7f-ce1d-4f22-8057-02bcc42e86e5" />
+        <classShapeMoniker Id="b1efe76f-891f-4997-be2e-8b03d65c9639" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="51f7c33f-0e19-4946-b8da-96325b7c55ac" absoluteBounds="0.5, 3, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/FifthSemesterDataContext/Supervisor" />
+      <nestedChildShapes>
+        <elementListCompartment Id="c6f969d7-9332-4c2d-ac3e-031d2117d225" absoluteBounds="0.51500000000000012, 3.46, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(2.5 : 3.88544840494792); (2.875 : 3.88544840494792)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/FifthSemesterDataContext/Supervisor/Supervisor_Student" />
+      <nodes>
+        <classShapeMoniker Id="51f7c33f-0e19-4946-b8da-96325b7c55ac" />
+        <classShapeMoniker Id="b1efe76f-891f-4997-be2e-8b03d65c9639" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>
