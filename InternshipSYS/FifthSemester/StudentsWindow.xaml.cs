@@ -29,8 +29,6 @@ namespace FifthSemester
 
         private void fillCombobxYear()
         {
-            List<Int32> ys = new List<int> { 2012, 2013, 2014 };
-            //comboBxYear.ItemsSource = ys;
             comboBxYear.ItemsSource = service.getYearList();
         }
 

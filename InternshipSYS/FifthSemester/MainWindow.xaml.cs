@@ -27,6 +27,7 @@ namespace FifthSemester
         private StudentsWindow st = null;
         private MainProjectsWindow mp = null;
         private LoadStudentDialog ls = null;
+        private PrintsWindow p = null;
 
         public MainWindow()
         {
@@ -104,6 +105,20 @@ namespace FifthSemester
             {
                 ls.Activate();
                 ls.WindowState = WindowState.Normal;
+            }
+        }
+
+        private void imgPrinter_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (!service.isPrintsWindowActive)
+            {
+                p = new PrintsWindow();
+                p.Show();
+                service.isPrintsWindowActive = true;
+            }else
+            {
+                p.Activate();
+                p.WindowState = WindowState.Normal;
             }
         }
     }

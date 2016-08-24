@@ -18,6 +18,7 @@ namespace SERVICE
         public Boolean isStudentsWindowActive { get; set; }
         public Boolean isMainProjectsWindowActive { get; set; }
         public Boolean isLoadStudentsWindowActive { get; set; }
+        public Boolean isPrintsWindowActive { get; set; }
         public static Service GetInstance
         {
             get
