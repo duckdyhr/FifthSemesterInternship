@@ -72,14 +72,14 @@
         <elementListCompartment Id="339dbeda-ad0e-4f24-85ee-6ad47020c5cb" absoluteBounds="2.89, 0.96, 1.9700000000000002, 3.3262125651041665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(5.25 : 3.56810628255208); (4.875 : 3.56810628255208)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(5.25 : 3.56810628255208); (4.875 : 3.56810628255208)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/LINQDataContext/Company/Company_Student" />
       <nodes>
         <classShapeMoniker Id="448305a5-83a2-4ab8-bfb2-8ab54d06b720" />
         <classShapeMoniker Id="36ce74a9-50a6-4a86-876e-a85f562f893c" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(5.25 : 1.38544840494792); (4.875 : 1.38544840494792)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(5.25 : 1.38544840494792); (4.875 : 1.38544840494792)]" fixedFrom="NotFixed" fixedTo="NotFixed">
       <AssociationMoniker Name="/LINQDataContext/Supervisor/Supervisor_Student" />
       <nodes>
         <classShapeMoniker Id="44484813-027d-48a1-b155-f5ca6028eb9e" />

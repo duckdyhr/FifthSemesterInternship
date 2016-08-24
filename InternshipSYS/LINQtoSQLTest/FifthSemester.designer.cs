@@ -39,6 +39,18 @@ namespace LINQtoSQLTest
     partial void InsertSupervisor(Supervisor instance);
     partial void UpdateSupervisor(Supervisor instance);
     partial void DeleteSupervisor(Supervisor instance);
+    partial void InsertYear(Year instance);
+    partial void UpdateYear(Year instance);
+    partial void DeleteYear(Year instance);
+    partial void InsertOffering(Offering instance);
+    partial void UpdateOffering(Offering instance);
+    partial void DeleteOffering(Offering instance);
+    partial void InsertMainProject(MainProject instance);
+    partial void UpdateMainProject(MainProject instance);
+    partial void DeleteMainProject(MainProject instance);
+    partial void InsertContact(Contact instance);
+    partial void UpdateContact(Contact instance);
+    partial void DeleteContact(Contact instance);
     #endregion
 		
 		public FifthSemesterDataContext() : 
@@ -94,6 +106,38 @@ namespace LINQtoSQLTest
 				return this.GetTable<Supervisor>();
 			}
 		}
+		
+		public System.Data.Linq.Table<Year> Years
+		{
+			get
+			{
+				return this.GetTable<Year>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Offering> Offerings
+		{
+			get
+			{
+				return this.GetTable<Offering>();
+			}
+		}
+		
+		public System.Data.Linq.Table<MainProject> MainProjects
+		{
+			get
+			{
+				return this.GetTable<MainProject>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Contact> Contacts
+		{
+			get
+			{
+				return this.GetTable<Contact>();
+			}
+		}
 	}
 	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Company")]
@@ -118,6 +162,12 @@ namespace LINQtoSQLTest
 		
 		private EntitySet<Student> _Students;
 		
+		private EntitySet<Offering> _Offerings;
+		
+		private EntitySet<MainProject> _MainProjects;
+		
+		private EntitySet<Contact> _Contacts;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -141,6 +191,9 @@ namespace LINQtoSQLTest
 		public Company()
 		{
 			this._Students = new EntitySet<Student>(new Action<Student>(this.attach_Students), new Action<Student>(this.detach_Students));
+			this._Offerings = new EntitySet<Offering>(new Action<Offering>(this.attach_Offerings), new Action<Offering>(this.detach_Offerings));
+			this._MainProjects = new EntitySet<MainProject>(new Action<MainProject>(this.attach_MainProjects), new Action<MainProject>(this.detach_MainProjects));
+			this._Contacts = new EntitySet<Contact>(new Action<Contact>(this.attach_Contacts), new Action<Contact>(this.detach_Contacts));
 			OnCreated();
 		}
 		
@@ -297,6 +350,45 @@ namespace LINQtoSQLTest
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Company_Offering", Storage="_Offerings", ThisKey="id", OtherKey="CompanyID")]
+		public EntitySet<Offering> Offerings
+		{
+			get
+			{
+				return this._Offerings;
+			}
+			set
+			{
+				this._Offerings.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Company_MainProject", Storage="_MainProjects", ThisKey="id", OtherKey="CompanyID")]
+		public EntitySet<MainProject> MainProjects
+		{
+			get
+			{
+				return this._MainProjects;
+			}
+			set
+			{
+				this._MainProjects.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Company_Contact", Storage="_Contacts", ThisKey="id", OtherKey="CompanyID")]
+		public EntitySet<Contact> Contacts
+		{
+			get
+			{
+				return this._Contacts;
+			}
+			set
+			{
+				this._Contacts.Assign(value);
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -324,6 +416,42 @@ namespace LINQtoSQLTest
 		}
 		
 		private void detach_Students(Student entity)
+		{
+			this.SendPropertyChanging();
+			entity.Company = null;
+		}
+		
+		private void attach_Offerings(Offering entity)
+		{
+			this.SendPropertyChanging();
+			entity.Company = this;
+		}
+		
+		private void detach_Offerings(Offering entity)
+		{
+			this.SendPropertyChanging();
+			entity.Company = null;
+		}
+		
+		private void attach_MainProjects(MainProject entity)
+		{
+			this.SendPropertyChanging();
+			entity.Company = this;
+		}
+		
+		private void detach_MainProjects(MainProject entity)
+		{
+			this.SendPropertyChanging();
+			entity.Company = null;
+		}
+		
+		private void attach_Contacts(Contact entity)
+		{
+			this.SendPropertyChanging();
+			entity.Company = this;
+		}
+		
+		private void detach_Contacts(Contact entity)
 		{
 			this.SendPropertyChanging();
 			entity.Company = null;
@@ -876,6 +1004,8 @@ namespace LINQtoSQLTest
 		
 		private EntitySet<Student> _Students;
 		
+		private EntitySet<MainProject> _MainProjects;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -895,6 +1025,7 @@ namespace LINQtoSQLTest
 		public Supervisor()
 		{
 			this._Students = new EntitySet<Student>(new Action<Student>(this.attach_Students), new Action<Student>(this.detach_Students));
+			this._MainProjects = new EntitySet<MainProject>(new Action<MainProject>(this.attach_MainProjects), new Action<MainProject>(this.detach_MainProjects));
 			OnCreated();
 		}
 		
@@ -1011,6 +1142,19 @@ namespace LINQtoSQLTest
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Supervisor_MainProject", Storage="_MainProjects", ThisKey="id", OtherKey="SupervisorID")]
+		public EntitySet<MainProject> MainProjects
+		{
+			get
+			{
+				return this._MainProjects;
+			}
+			set
+			{
+				this._MainProjects.Assign(value);
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -1041,6 +1185,790 @@ namespace LINQtoSQLTest
 		{
 			this.SendPropertyChanging();
 			entity.Supervisor = null;
+		}
+		
+		private void attach_MainProjects(MainProject entity)
+		{
+			this.SendPropertyChanging();
+			entity.Supervisor = this;
+		}
+		
+		private void detach_MainProjects(MainProject entity)
+		{
+			this.SendPropertyChanging();
+			entity.Supervisor = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Year")]
+	public partial class Year : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _value;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnvalueChanging(int value);
+    partial void OnvalueChanged();
+    #endregion
+		
+		public Year()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_value", DbType="Int NOT NULL", IsPrimaryKey=true)]
+		public int value
+		{
+			get
+			{
+				return this._value;
+			}
+			set
+			{
+				if ((this._value != value))
+				{
+					this.OnvalueChanging(value);
+					this.SendPropertyChanging();
+					this._value = value;
+					this.SendPropertyChanged("value");
+					this.OnvalueChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Offering")]
+	public partial class Offering : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private System.Nullable<int> _year;
+		
+		private string _season;
+		
+		private System.Nullable<int> _offeringNumber;
+		
+		private System.Nullable<int> _CompanyID;
+		
+		private EntityRef<Company> _Company;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnyearChanging(System.Nullable<int> value);
+    partial void OnyearChanged();
+    partial void OnseasonChanging(string value);
+    partial void OnseasonChanged();
+    partial void OnofferingNumberChanging(System.Nullable<int> value);
+    partial void OnofferingNumberChanged();
+    partial void OnCompanyIDChanging(System.Nullable<int> value);
+    partial void OnCompanyIDChanged();
+    #endregion
+		
+		public Offering()
+		{
+			this._Company = default(EntityRef<Company>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_year", DbType="Int")]
+		public System.Nullable<int> year
+		{
+			get
+			{
+				return this._year;
+			}
+			set
+			{
+				if ((this._year != value))
+				{
+					this.OnyearChanging(value);
+					this.SendPropertyChanging();
+					this._year = value;
+					this.SendPropertyChanged("year");
+					this.OnyearChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_season", DbType="VarChar(6)")]
+		public string season
+		{
+			get
+			{
+				return this._season;
+			}
+			set
+			{
+				if ((this._season != value))
+				{
+					this.OnseasonChanging(value);
+					this.SendPropertyChanging();
+					this._season = value;
+					this.SendPropertyChanged("season");
+					this.OnseasonChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_offeringNumber", DbType="Int")]
+		public System.Nullable<int> offeringNumber
+		{
+			get
+			{
+				return this._offeringNumber;
+			}
+			set
+			{
+				if ((this._offeringNumber != value))
+				{
+					this.OnofferingNumberChanging(value);
+					this.SendPropertyChanging();
+					this._offeringNumber = value;
+					this.SendPropertyChanged("offeringNumber");
+					this.OnofferingNumberChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CompanyID", DbType="Int")]
+		public System.Nullable<int> CompanyID
+		{
+			get
+			{
+				return this._CompanyID;
+			}
+			set
+			{
+				if ((this._CompanyID != value))
+				{
+					if (this._Company.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnCompanyIDChanging(value);
+					this.SendPropertyChanging();
+					this._CompanyID = value;
+					this.SendPropertyChanged("CompanyID");
+					this.OnCompanyIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Company_Offering", Storage="_Company", ThisKey="CompanyID", OtherKey="id", IsForeignKey=true, DeleteRule="CASCADE")]
+		public Company Company
+		{
+			get
+			{
+				return this._Company.Entity;
+			}
+			set
+			{
+				Company previousValue = this._Company.Entity;
+				if (((previousValue != value) 
+							|| (this._Company.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Company.Entity = null;
+						previousValue.Offerings.Remove(this);
+					}
+					this._Company.Entity = value;
+					if ((value != null))
+					{
+						value.Offerings.Add(this);
+						this._CompanyID = value.id;
+					}
+					else
+					{
+						this._CompanyID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Company");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.MainProject")]
+	public partial class MainProject : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _id;
+		
+		private string _comments;
+		
+		private string _title;
+		
+		private System.Nullable<short> _groupNo;
+		
+		private string _season;
+		
+		private System.Nullable<int> _year;
+		
+		private System.Nullable<int> _SupervisorID;
+		
+		private System.Nullable<int> _CompanyID;
+		
+		private EntityRef<Company> _Company;
+		
+		private EntityRef<Supervisor> _Supervisor;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OncommentsChanging(string value);
+    partial void OncommentsChanged();
+    partial void OntitleChanging(string value);
+    partial void OntitleChanged();
+    partial void OngroupNoChanging(System.Nullable<short> value);
+    partial void OngroupNoChanged();
+    partial void OnseasonChanging(string value);
+    partial void OnseasonChanged();
+    partial void OnyearChanging(System.Nullable<int> value);
+    partial void OnyearChanged();
+    partial void OnSupervisorIDChanging(System.Nullable<int> value);
+    partial void OnSupervisorIDChanged();
+    partial void OnCompanyIDChanging(System.Nullable<int> value);
+    partial void OnCompanyIDChanged();
+    #endregion
+		
+		public MainProject()
+		{
+			this._Company = default(EntityRef<Company>);
+			this._Supervisor = default(EntityRef<Supervisor>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_comments", DbType="VarChar(MAX)")]
+		public string comments
+		{
+			get
+			{
+				return this._comments;
+			}
+			set
+			{
+				if ((this._comments != value))
+				{
+					this.OncommentsChanging(value);
+					this.SendPropertyChanging();
+					this._comments = value;
+					this.SendPropertyChanged("comments");
+					this.OncommentsChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_title", DbType="VarChar(55)")]
+		public string title
+		{
+			get
+			{
+				return this._title;
+			}
+			set
+			{
+				if ((this._title != value))
+				{
+					this.OntitleChanging(value);
+					this.SendPropertyChanging();
+					this._title = value;
+					this.SendPropertyChanged("title");
+					this.OntitleChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_groupNo", DbType="SmallInt")]
+		public System.Nullable<short> groupNo
+		{
+			get
+			{
+				return this._groupNo;
+			}
+			set
+			{
+				if ((this._groupNo != value))
+				{
+					this.OngroupNoChanging(value);
+					this.SendPropertyChanging();
+					this._groupNo = value;
+					this.SendPropertyChanged("groupNo");
+					this.OngroupNoChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_season", DbType="VarChar(6)")]
+		public string season
+		{
+			get
+			{
+				return this._season;
+			}
+			set
+			{
+				if ((this._season != value))
+				{
+					this.OnseasonChanging(value);
+					this.SendPropertyChanging();
+					this._season = value;
+					this.SendPropertyChanged("season");
+					this.OnseasonChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_year", DbType="Int")]
+		public System.Nullable<int> year
+		{
+			get
+			{
+				return this._year;
+			}
+			set
+			{
+				if ((this._year != value))
+				{
+					this.OnyearChanging(value);
+					this.SendPropertyChanging();
+					this._year = value;
+					this.SendPropertyChanged("year");
+					this.OnyearChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SupervisorID", DbType="Int")]
+		public System.Nullable<int> SupervisorID
+		{
+			get
+			{
+				return this._SupervisorID;
+			}
+			set
+			{
+				if ((this._SupervisorID != value))
+				{
+					if (this._Supervisor.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnSupervisorIDChanging(value);
+					this.SendPropertyChanging();
+					this._SupervisorID = value;
+					this.SendPropertyChanged("SupervisorID");
+					this.OnSupervisorIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CompanyID", DbType="Int")]
+		public System.Nullable<int> CompanyID
+		{
+			get
+			{
+				return this._CompanyID;
+			}
+			set
+			{
+				if ((this._CompanyID != value))
+				{
+					if (this._Company.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnCompanyIDChanging(value);
+					this.SendPropertyChanging();
+					this._CompanyID = value;
+					this.SendPropertyChanged("CompanyID");
+					this.OnCompanyIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Company_MainProject", Storage="_Company", ThisKey="CompanyID", OtherKey="id", IsForeignKey=true)]
+		public Company Company
+		{
+			get
+			{
+				return this._Company.Entity;
+			}
+			set
+			{
+				Company previousValue = this._Company.Entity;
+				if (((previousValue != value) 
+							|| (this._Company.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Company.Entity = null;
+						previousValue.MainProjects.Remove(this);
+					}
+					this._Company.Entity = value;
+					if ((value != null))
+					{
+						value.MainProjects.Add(this);
+						this._CompanyID = value.id;
+					}
+					else
+					{
+						this._CompanyID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Company");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Supervisor_MainProject", Storage="_Supervisor", ThisKey="SupervisorID", OtherKey="id", IsForeignKey=true)]
+		public Supervisor Supervisor
+		{
+			get
+			{
+				return this._Supervisor.Entity;
+			}
+			set
+			{
+				Supervisor previousValue = this._Supervisor.Entity;
+				if (((previousValue != value) 
+							|| (this._Supervisor.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Supervisor.Entity = null;
+						previousValue.MainProjects.Remove(this);
+					}
+					this._Supervisor.Entity = value;
+					if ((value != null))
+					{
+						value.MainProjects.Add(this);
+						this._SupervisorID = value.id;
+					}
+					else
+					{
+						this._SupervisorID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Supervisor");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Contact")]
+	public partial class Contact : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private string _name;
+		
+		private string _phone;
+		
+		private string _email;
+		
+		private int _id;
+		
+		private System.Nullable<int> _CompanyID;
+		
+		private EntityRef<Company> _Company;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnnameChanging(string value);
+    partial void OnnameChanged();
+    partial void OnphoneChanging(string value);
+    partial void OnphoneChanged();
+    partial void OnemailChanging(string value);
+    partial void OnemailChanged();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
+    partial void OnCompanyIDChanging(System.Nullable<int> value);
+    partial void OnCompanyIDChanged();
+    #endregion
+		
+		public Contact()
+		{
+			this._Company = default(EntityRef<Company>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_name", DbType="VarChar(50)")]
+		public string name
+		{
+			get
+			{
+				return this._name;
+			}
+			set
+			{
+				if ((this._name != value))
+				{
+					this.OnnameChanging(value);
+					this.SendPropertyChanging();
+					this._name = value;
+					this.SendPropertyChanged("name");
+					this.OnnameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_phone", DbType="VarChar(15)")]
+		public string phone
+		{
+			get
+			{
+				return this._phone;
+			}
+			set
+			{
+				if ((this._phone != value))
+				{
+					this.OnphoneChanging(value);
+					this.SendPropertyChanging();
+					this._phone = value;
+					this.SendPropertyChanged("phone");
+					this.OnphoneChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_email", DbType="VarChar(40)")]
+		public string email
+		{
+			get
+			{
+				return this._email;
+			}
+			set
+			{
+				if ((this._email != value))
+				{
+					this.OnemailChanging(value);
+					this.SendPropertyChanging();
+					this._email = value;
+					this.SendPropertyChanged("email");
+					this.OnemailChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int id
+		{
+			get
+			{
+				return this._id;
+			}
+			set
+			{
+				if ((this._id != value))
+				{
+					this.OnidChanging(value);
+					this.SendPropertyChanging();
+					this._id = value;
+					this.SendPropertyChanged("id");
+					this.OnidChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CompanyID", DbType="Int")]
+		public System.Nullable<int> CompanyID
+		{
+			get
+			{
+				return this._CompanyID;
+			}
+			set
+			{
+				if ((this._CompanyID != value))
+				{
+					if (this._Company.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnCompanyIDChanging(value);
+					this.SendPropertyChanging();
+					this._CompanyID = value;
+					this.SendPropertyChanged("CompanyID");
+					this.OnCompanyIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Company_Contact", Storage="_Company", ThisKey="CompanyID", OtherKey="id", IsForeignKey=true, DeleteRule="CASCADE")]
+		public Company Company
+		{
+			get
+			{
+				return this._Company.Entity;
+			}
+			set
+			{
+				Company previousValue = this._Company.Entity;
+				if (((previousValue != value) 
+							|| (this._Company.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Company.Entity = null;
+						previousValue.Contacts.Remove(this);
+					}
+					this._Company.Entity = value;
+					if ((value != null))
+					{
+						value.Contacts.Add(this);
+						this._CompanyID = value.id;
+					}
+					else
+					{
+						this._CompanyID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Company");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
 		}
 	}
 }

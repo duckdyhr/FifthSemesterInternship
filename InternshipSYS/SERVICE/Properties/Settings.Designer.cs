@@ -36,7 +36,9 @@ namespace SERVICE.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=eaa-sh-sm-BO;Initial Catalog=FifthSemester;Integrated Security=True")]
+        //[global::System.Configuration.DefaultSettingValueAttribute("Data Source=eaa-sh-sm-BO;Initial Catalog=FifthSemester;Integrated Security=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=FifthSemester;Integrated Secur" +
+            "ity=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True")]
         public string FifthSemesterConnectionString {
             get {
                 return ((string)(this["FifthSemesterConnectionString"]));

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="FifthSemester" Class="LINQDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=eaa-sh-sm-1;Initial Catalog=FifthSemester;Integrated Security=True" SettingsObjectName="SERVICE.Properties.Settings" SettingsPropertyName="FifthSemesterConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="AppSettings" ConnectionString="Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=FifthSemester;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False" SettingsObjectName="SERVICE.Properties.Settings" SettingsPropertyName="FifthSemesterConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Company" Member="Companies">
     <Type Name="Company">
       <Column Name="comments" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />

@@ -10,6 +10,9 @@
       <Column Name="zipcode" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Association Name="Company_Student" Member="Students" ThisKey="id" OtherKey="CompanyID" Type="Student" />
+      <Association Name="Company_Offering" Member="Offerings" ThisKey="id" OtherKey="CompanyID" Type="Offering" />
+      <Association Name="Company_MainProject" Member="MainProjects" ThisKey="id" OtherKey="CompanyID" Type="MainProject" />
+      <Association Name="Company_Contact" Member="Contacts" ThisKey="id" OtherKey="CompanyID" Type="Contact" />
     </Type>
   </Table>
   <Table Name="dbo.Student" Member="Students">
@@ -43,6 +46,46 @@
       <Column Name="office" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
       <Column Name="phone" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
       <Association Name="Supervisor_Student" Member="Students" ThisKey="id" OtherKey="SupervisorID" Type="Student" />
+      <Association Name="Supervisor_MainProject" Member="MainProjects" ThisKey="id" OtherKey="SupervisorID" Type="MainProject" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Year" Member="Years">
+    <Type Name="Year">
+      <Column Name="value" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Offering" Member="Offerings">
+    <Type Name="Offering">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="year" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="season" Type="System.String" DbType="VarChar(6)" CanBeNull="true" />
+      <Column Name="offeringNumber" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CompanyID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Company_Offering" Member="Company" ThisKey="CompanyID" OtherKey="id" Type="Company" IsForeignKey="true" DeleteRule="CASCADE" />
+    </Type>
+  </Table>
+  <Table Name="dbo.MainProject" Member="MainProjects">
+    <Type Name="MainProject">
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="comments" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="title" Type="System.String" DbType="VarChar(55)" CanBeNull="true" />
+      <Column Name="groupNo" Type="System.Int16" DbType="SmallInt" CanBeNull="true" />
+      <Column Name="season" Type="System.String" DbType="VarChar(6)" CanBeNull="true" />
+      <Column Name="year" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="SupervisorID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CompanyID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Company_MainProject" Member="Company" ThisKey="CompanyID" OtherKey="id" Type="Company" IsForeignKey="true" />
+      <Association Name="Supervisor_MainProject" Member="Supervisor" ThisKey="SupervisorID" OtherKey="id" Type="Supervisor" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Contact" Member="Contacts">
+    <Type Name="Contact">
+      <Column Name="name" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="phone" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="email" Type="System.String" DbType="VarChar(40)" CanBeNull="true" />
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CompanyID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Company_Contact" Member="Company" ThisKey="CompanyID" OtherKey="id" Type="Company" IsForeignKey="true" DeleteRule="CASCADE" />
     </Type>
   </Table>
 </Database>

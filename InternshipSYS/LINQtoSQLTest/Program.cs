@@ -15,6 +15,9 @@ namespace LINQtoSQLTest
             var students = dbx.Students.ToList();
             students.ForEach(s => Console.WriteLine("\t" + s.name));
 
+            Console.WriteLine("Years:");
+            var years = dbx.Years.ToList();
+            years.ForEach(y => Console.WriteLine("\t" + y.value));
             Console.Read();
         }
     }
