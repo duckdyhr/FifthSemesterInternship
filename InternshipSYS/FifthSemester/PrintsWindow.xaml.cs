@@ -20,6 +20,8 @@ namespace FifthSemester
     public partial class PrintsWindow : Window
     {
         private Service service;
+        private List<Student> studentList;
+
         public PrintsWindow()
         {
             service = Service.GetInstance;
@@ -31,39 +33,61 @@ namespace FifthSemester
         {
             comboBxYear.ItemsSource = service.getYearList();
         }
-        private void Window_Closed(object sender, EventArgs e)
-        {
-            service.isStudentsWindowActive = false;
-        }
 
         private void comboBxYear_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+
             if (comboBxYear.SelectedItem != null)
             {
-                //studentList = service.getStudentsByYear(Int32.Parse(comboBxYear.SelectedItem.ToString()));
-                //DGStudents.ItemsSource = studentList;
+                studentList = service.getStudentsByYear(Int32.Parse(comboBxYear.SelectedItem.ToString()));
+                DGStudents.ItemsSource = studentList;
                 //listToGroupBy = studentList;
                 comboBxSeason.IsEnabled = true;
                 comboBxSeason.Text = "Choose Season";
             }
         }
+        private void fillGrid()
+        {
+            studentList = service.getStudentsByYear(Int32.Parse(comboBxYear.SelectedItem.ToString()));
+            if (comboBxSeason.SelectedItem != null)
+            {
+                List<Student> tempList = new List<Student>();
+                ComboBoxItem season = comboBxSeason.SelectedItem as ComboBoxItem;
+                foreach (Student s in studentList)
+                {
+                    if (s.season.Equals(season.Content.ToString()))
+                    {
+                        tempList.Add(s);
+                    }
+                }
+                studentList = tempList;
+            }
+            //listToGroupBy = studentList;
+            DGStudents.ItemsSource = studentList;
+        }
 
         private void comboBxSeason_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //TxbSearchStudent.Text = "";
-            //if (comboBxSeason.SelectedItem != null)
-            //{
-            //    List<Student> tempList = new List<Student>();
-            //    ComboBoxItem season = comboBxSeason.SelectedItem as ComboBoxItem;
-            //    foreach (Student s in studentList)
-            //    {
-            //        if (s.season.Equals(season.Content.ToString()))
-            //        {
-            //            tempList.Add(s);
-            //        }
-            //    }
-            //    listToGroupBy = tempList;
-            //    DGStudents.ItemsSource = tempList;
+            if (comboBxSeason.SelectedItem != null)
+            {
+                List<Student> tempList = new List<Student>();
+                ComboBoxItem season = comboBxSeason.SelectedItem as ComboBoxItem;
+                foreach (Student s in studentList)
+                {
+                    if (s.season.Equals(season.Content.ToString()))
+                    {
+                        tempList.Add(s);
+                    }
+                }
+                //listToGroupBy = tempList;
+                DGStudents.ItemsSource = tempList;
+            }
+
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            service.isStudentsWindowActive = false;
         }
 
     }
