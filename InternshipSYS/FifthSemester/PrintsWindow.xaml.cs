@@ -1,6 +1,8 @@
-﻿using SERVICE;
+﻿using Microsoft.Win32;
+using SERVICE;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -11,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Xml;
 
 namespace FifthSemester
 {
@@ -90,5 +93,40 @@ namespace FifthSemester
             service.isStudentsWindowActive = false;
         }
 
+        private void btnSaveAsPdf_Click(object sender, RoutedEventArgs e)
+        {
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            using (StreamWriter outputFile = new StreamWriter(path + @"\TestToTxt.txt"))
+            {
+                outputFile.WriteLine("Testing to txt..");
+                foreach (Student s in studentList)
+                {
+                    outputFile.WriteLine(studentStringRepresentation(s));
+                }
+            }
+            lblTest.Content = "Saving to pdf...";
+
+            //Or:
+            //SaveFileDialog sfd = new SaveFileDialog();
+        }
+        private string studentStringRepresentation(Student s)
+        {
+            string result = s.name + " " + s.email + " " + s.phone + " " + s.application + " " + s.contract + " " + s.leaningobjectives + " " + s.address + " " + s.zipcode + " " + s.@class + " " + s.year + " " + s.season + " " + s.Company + " " + s.Supervisor;
+            return result;
+        }
+
+        private void btnPrint_Click(object sender, RoutedEventArgs e)
+        {
+            lblTest.Content = "Printing list ...";
+            PrintDialog pDialog = new PrintDialog();
+            // Display the dialog. This returns true if the user presses the Print button.
+            Nullable<Boolean> print = pDialog.ShowDialog();
+            //if (print == true)
+            //{
+            //    XpsDocument xpsDocument = new XpsDocument("C:\\FixedDocumentSequence.xps", FileAccess.ReadWrite);
+            //    FixedDocumentSequence fixedDocSeq = xpsDocument.GetFixedDocumentSequence();
+            //    pDialog.PrintDocument(fixedDocSeq.DocumentPaginator, "Test print job");
+            //}
+        }
     }
 }

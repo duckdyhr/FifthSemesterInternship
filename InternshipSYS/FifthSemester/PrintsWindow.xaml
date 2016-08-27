@@ -39,6 +39,7 @@
             </Grid>
         </GroupBox>
         <GroupBox Header="Selection" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+            
             <DataGrid Name="DGStudents" AutoGenerateColumns="False" IsEnabled="True" SelectionMode="Single" AlternatingRowBackground="lightGray" AlternationCount="2" Height="402">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding name}" IsReadOnly="True"/>
@@ -91,6 +92,10 @@
                 </DataGrid.GroupStyle>
             </DataGrid>
         </GroupBox>
-        <Button Name="btnSaveAsPdf" Content="Save as pdf" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Right">
+            <Label Name="lblTest" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            <Button Name="btnSaveAsPdf" Content="Save as pdf" Width="70" VerticalAlignment="Center" Click="btnSaveAsPdf_Click"/>
+            <Button Name="btnPrint" Content="Print" Width="70" VerticalAlignment="Center" Click="btnPrint_Click" />
+        </StackPanel>
     </Grid>
 </Window>

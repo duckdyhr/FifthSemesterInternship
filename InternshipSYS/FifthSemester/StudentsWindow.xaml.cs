@@ -230,7 +230,6 @@ namespace FifthSemester
                 listToGroupBy = tempList;
                 DGStudents.ItemsSource = tempList;
             }
-
         }
 
         private void TxbSearchStudent_SelectionChanged(object sender, RoutedEventArgs e)
