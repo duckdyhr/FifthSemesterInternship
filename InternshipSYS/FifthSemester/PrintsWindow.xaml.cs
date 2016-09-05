@@ -2,7 +2,6 @@
 using SERVICE;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -15,6 +14,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Xml;
 
+using System.IO;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+
 namespace FifthSemester
 {
     /// <summary>
@@ -24,6 +27,10 @@ namespace FifthSemester
     {
         private Service service;
         private List<Student> studentList;
+
+        //Base for the document's fonts
+        private static readonly BaseFont font = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, false);
+
 
         public PrintsWindow()
         {
@@ -96,16 +103,68 @@ namespace FifthSemester
         private void btnSaveAsPdf_Click(object sender, RoutedEventArgs e)
         {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            using (StreamWriter outputFile = new StreamWriter(path + @"\TestToTxt.txt"))
-            {
-                outputFile.WriteLine("Testing to txt..");
-                foreach (Student s in studentList)
-                {
-                    outputFile.WriteLine(studentStringRepresentation(s));
-                }
-            }
-            lblTest.Content = "Saving to pdf...";
 
+            //Document and PdfWriter are from iTextSharp import
+            Document doc = new Document(iTextSharp.text.PageSize.A4, 10, 10, 10, 10);
+            PdfWriter writer = null;
+            try
+            {
+                writer = PdfWriter.GetInstance(doc, new FileStream(path + @"\PrintableList.pdf", FileMode.Create));
+
+                doc.Open();
+
+                Font headingFont = new Font(font, 24, Font.NORMAL, BaseColor.RED);
+                iTextSharp.text.Paragraph pHeading = new iTextSharp.text.Paragraph("Heading", headingFont);
+                doc.Add(pHeading);
+
+                if (studentList != null)
+                {
+                    PdfPTable table = new PdfPTable(3);
+
+                    foreach (Student s in studentList)
+                    {
+                        //iTextSharp.text.Paragraph p = new iTextSharp.text.Paragraph(studentStringRepresentation(s) + "\n");
+                        //doc.Add(p);
+                        table.AddCell(s.id + "");
+                        table.AddCell(s.name);
+                        table.AddCell(s.Company.name);
+                    }
+                    doc.Add(table);
+                }
+
+                lblTest.Content = "Saving to .pdf";
+            }
+            catch (DocumentException de)
+            {
+                lblTest.Content = "Failed to save";
+                throw de;
+            }
+            catch(IOException ie)
+            {
+                lblTest.Content = "Failed to save";
+                throw ie;
+            }
+            finally
+            {
+                doc.Close();
+                writer?.Close();
+            }
+        }
+
+        private void SaveToTxt()
+        {
+            //using (StreamWriter outputFile = new StreamWriter(path + @"\TestToTxt.txt"))
+            //{
+            //    outputFile.WriteLine("Testing to txt..");
+            //    if (studentList != null)
+            //    {
+            //        foreach (Student s in studentList)
+            //        {
+            //            outputFile.WriteLine(studentStringRepresentation(s));
+            //        }
+            //    }
+            //}
+            //lblTest.Content = "Saving to .txt...";
             //Or:
             //SaveFileDialog sfd = new SaveFileDialog();
         }
