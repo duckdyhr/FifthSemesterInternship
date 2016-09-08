@@ -105,7 +105,12 @@ namespace FifthSemester
             string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
             //Document and PdfWriter are from iTextSharp import
-            Document doc = new Document(iTextSharp.text.PageSize.A4, 10, 10, 10, 10);
+            Document doc = new Document(iTextSharp.text.PageSize.A4.Rotate(), 10, 10, 10, 10);
+
+            Font headingFont = new Font(font, 24, Font.NORMAL, BaseColor.RED);
+            Font tableheadFont = new Font(font, 12, Font.BOLD);
+            Font tablecellFont = new Font(font, 12);
+
             PdfWriter writer = null;
             try
             {
@@ -113,23 +118,54 @@ namespace FifthSemester
 
                 doc.Open();
 
-                Font headingFont = new Font(font, 24, Font.NORMAL, BaseColor.RED);
-                iTextSharp.text.Paragraph pHeading = new iTextSharp.text.Paragraph("Heading", headingFont);
-                doc.Add(pHeading);
+                
+                iTextSharp.text.Paragraph paragHeading = new iTextSharp.text.Paragraph("Heading", headingFont);
+                doc.Add(paragHeading);
 
                 if (studentList != null)
                 {
-                    PdfPTable table = new PdfPTable(3);
+                    PdfPTable table = new PdfPTable(13);
+                    int[] widths = new int[] {1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 2 };
+                    table.SetWidths(widths);
+
+                    //Move headings to list instead?
+                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Name", tableheadFont)));
+                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Email", tableheadFont)));
+                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Phone", tableheadFont)));
+                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Application", tableheadFont)));
+                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Contract", tableheadFont)));
+                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Learning Objectives", tableheadFont)));
+                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Address", tableheadFont)));
+                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Zipcode", tableheadFont)));
+                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Class", tableheadFont)));
+                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Year", tableheadFont)));
+                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Season", tableheadFont)));
+                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Company", tableheadFont)));
+                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Supervisor", tableheadFont)));
 
                     foreach (Student s in studentList)
                     {
                         //iTextSharp.text.Paragraph p = new iTextSharp.text.Paragraph(studentStringRepresentation(s) + "\n");
                         //doc.Add(p);
-                        table.AddCell(s.id + "");
-                        table.AddCell(s.name);
-                        table.AddCell(s.Company.name);
+                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.name, tablecellFont)));
+                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.email, tablecellFont)));
+                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.phone, tablecellFont)));
+                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.application.ToString(), tablecellFont)));
+                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.contract.ToString(), tablecellFont)));
+                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.leaningobjectives.ToString(), tablecellFont)));
+                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.address, tablecellFont)));
+                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.zipcode + "", tablecellFont)));
+                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.@class, tablecellFont)));
+                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.year + "", tablecellFont)));
+                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.season, tablecellFont)));
+                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.Company.name, tablecellFont)));
+                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.Supervisor.name, tablecellFont)));
                     }
                     doc.Add(table);
+                }
+                else
+                {
+                    //Give user a meaningful response as no students are selected...
                 }
 
                 lblTest.Content = "Saving to .pdf";
