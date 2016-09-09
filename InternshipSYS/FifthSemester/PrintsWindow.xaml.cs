@@ -31,7 +31,22 @@ namespace FifthSemester
         //Base for the document's fonts
         private static readonly BaseFont font = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, false);
 
-
+        private Dictionary<string, string> currentGridColumns;
+        private static readonly Dictionary<string, string> studentSupervisorColums = new Dictionary<string, string>() {
+            {"Name", "name" },
+            {"Class", "class" },
+            {"Supervisor", "Supervisor.name" },
+            {"Email", "email" },
+            {"Company", "Company.name" },
+            {"Comments", "comments" }
+        };
+        private static readonly Dictionary<string, string> studentCompanyColumns = new Dictionary<string, string>()
+        {
+            {"Name", "name" },
+            {"Class", "class"},
+            {"Company", "Company.name" },
+            {"Comments", "comments" }
+        };
         public PrintsWindow()
         {
             service = Service.GetInstance;
@@ -49,9 +64,6 @@ namespace FifthSemester
 
             if (comboBxYear.SelectedItem != null)
             {
-                studentList = service.getStudentsByYear(Int32.Parse(comboBxYear.SelectedItem.ToString()));
-                DGStudents.ItemsSource = studentList;
-                //listToGroupBy = studentList;
                 comboBxSeason.IsEnabled = true;
                 comboBxSeason.Text = "Choose Season";
             }
@@ -73,26 +85,68 @@ namespace FifthSemester
                 studentList = tempList;
             }
             //listToGroupBy = studentList;
-            DGStudents.ItemsSource = studentList;
+            datagrid.ItemsSource = studentList;
         }
 
         private void comboBxSeason_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (comboBxSeason.SelectedItem != null)
             {
-                List<Student> tempList = new List<Student>();
-                ComboBoxItem season = comboBxSeason.SelectedItem as ComboBoxItem;
-                foreach (Student s in studentList)
-                {
-                    if (s.season.Equals(season.Content.ToString()))
-                    {
-                        tempList.Add(s);
-                    }
-                }
-                //listToGroupBy = tempList;
-                DGStudents.ItemsSource = tempList;
+                comboBxSelection.IsEnabled = true;
             }
+        }
 
+        private void comboBxSelection_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(comboBxSelection.SelectedItem != null)
+            {
+                
+                ComboBoxItem selection = comboBxSelection.SelectedItem as ComboBoxItem;
+                ComboBoxItem season = comboBxSeason.SelectedItem as ComboBoxItem;
+                
+                if (selection.Content.ToString().Equals("Student company assignment"))
+                {
+                    currentGridColumns = studentCompanyColumns;
+                    GenerateStudentCompanyAssignmentDG(season.Content.ToString());
+                    //listToGroupBy = tempList;
+                }
+                else if (selection.Content.ToString().Equals("Student supervisor assignment"))
+                {
+                    currentGridColumns = studentSupervisorColums;
+                    GenerateStudentCompanyAssignmentDG(season.Content.ToString());
+
+                }else if (selection.Content.ToString().Equals(""))
+                {
+
+                }else if (selection.Content.ToString().Equals(""))
+                {
+
+                }
+                
+            }
+        }
+
+        private void GenerateStudentCompanyAssignmentDG(string season)
+        {
+            datagrid.Columns.Clear();
+            DataGridTextColumn textColumn;
+            foreach(KeyValuePair<string, string> column in currentGridColumns)
+            {
+                textColumn = new DataGridTextColumn();
+                textColumn.Header = column.Key;
+                textColumn.Binding = new Binding(column.Value);
+                datagrid.Columns.Add(textColumn);
+            }
+            studentList = service.getStudentsByYear(Int32.Parse(comboBxYear.SelectedItem.ToString()));
+            List<Student> tempList = new List<Student>();
+            foreach (Student s in studentList)
+            {
+                if (s.season.Equals(season))
+                {
+                    tempList.Add(s);
+                }
+            }
+            datagrid.ItemsSource = tempList;
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -187,23 +241,15 @@ namespace FifthSemester
             }
         }
 
-        private void SaveToTxt()
+        private void btnStudentSuper_Click(object sender, RoutedEventArgs e)
         {
-            //using (StreamWriter outputFile = new StreamWriter(path + @"\TestToTxt.txt"))
-            //{
-            //    outputFile.WriteLine("Testing to txt..");
-            //    if (studentList != null)
-            //    {
-            //        foreach (Student s in studentList)
-            //        {
-            //            outputFile.WriteLine(studentStringRepresentation(s));
-            //        }
-            //    }
-            //}
-            //lblTest.Content = "Saving to .txt...";
-            //Or:
-            //SaveFileDialog sfd = new SaveFileDialog();
+            datagrid.Columns.Clear();
+
+            //DGStudents.ItemsSource = new List<string>();
+
+            lblTest.Content = "studentsuper clicked";
         }
+
         private string studentStringRepresentation(Student s)
         {
             string result = s.name + " " + s.email + " " + s.phone + " " + s.application + " " + s.contract + " " + s.leaningobjectives + " " + s.address + " " + s.zipcode + " " + s.@class + " " + s.year + " " + s.season + " " + s.Company + " " + s.Supervisor;
@@ -223,5 +269,24 @@ namespace FifthSemester
             //    pDialog.PrintDocument(fixedDocSeq.DocumentPaginator, "Test print job");
             //}
         }
+        private void SaveToTxt()
+        {
+            //using (StreamWriter outputFile = new StreamWriter(path + @"\TestToTxt.txt"))
+            //{
+            //    outputFile.WriteLine("Testing to txt..");
+            //    if (studentList != null)
+            //    {
+            //        foreach (Student s in studentList)
+            //        {
+            //            outputFile.WriteLine(studentStringRepresentation(s));
+            //        }
+            //    }
+            //}
+            //lblTest.Content = "Saving to .txt...";
+            //Or:
+            //SaveFileDialog sfd = new SaveFileDialog();
+        }
+
+        
     }
 }
