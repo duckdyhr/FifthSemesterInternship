@@ -43,22 +43,23 @@
                     <ColumnDefinition Width="200"/>
                 </Grid.ColumnDefinitions>
 
-                <Label VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,16">Year:</Label>
-                <ComboBox Name="comboBxYear" Grid.Column="1" Height="25" Width="100" Text="Choose Year" IsEditable="True" IsReadOnly="True"  SelectionChanged="comboBxYear_SelectionChanged" Margin="0,16"></ComboBox>
-
-                <Label Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,16">Season:</Label>
-                <ComboBox Name="comboBxSeason" Grid.Column="3" Height="25" Text="Choose Season" IsEditable="True" IsReadOnly="True" IsEnabled="False" SelectionChanged="comboBxSeason_SelectionChanged" Margin="0,16">
-                    <ComboBoxItem Content="Spring"></ComboBoxItem>
-                    <ComboBoxItem Content="Autumn"></ComboBoxItem>
-                </ComboBox>
-                <Label Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,16">Selection:</Label>
-                <ComboBox Name="comboBxSelection" Grid.Column="5" Height="25" Width="100" Text="Choose Selection" IsEditable="True" IsReadOnly="True" IsEnabled="False" Margin="0,16" SelectionChanged="comboBxSelection_SelectionChanged">
+                <Label VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,16">Selection:</Label>
+                <ComboBox Name="comboBxSelection" Grid.Column="1" Height="25" Width="100" Text="Choose Selection" IsEditable="True" IsReadOnly="True" IsEnabled="True" Margin="0,16" SelectionChanged="comboBxSelection_SelectionChanged">
                     <ComboBoxItem Content="Student supervisor assignment"></ComboBoxItem>
                     <ComboBoxItem Content="Student company assignment"></ComboBoxItem>
                     <ComboBoxItem Content="Students who has a company agreement"></ComboBoxItem>
                     <ComboBoxItem Content="Students who have EAAA listed as company"></ComboBoxItem>
                     <ComboBoxItem Content="Main project overview Signe"></ComboBoxItem>
                     <ComboBoxItem Content="Companies with contacts"></ComboBoxItem>
+                </ComboBox>
+                
+                <Label Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,16">Year:</Label>
+                <ComboBox Name="comboBxYear" Grid.Column="3" Height="25" Width="100" Text="Choose Year" IsEditable="True" IsReadOnly="True" IsEnabled="False" SelectionChanged="comboBxYear_SelectionChanged" Margin="0,16"></ComboBox>
+                
+                <Label Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,16">Season:</Label>
+                <ComboBox Name="comboBxSeason" Grid.Column="5" Height="25" Text="Choose Season" IsEditable="True" IsReadOnly="True" IsEnabled="False" SelectionChanged="comboBxSeason_SelectionChanged" Margin="0,16">
+                    <ComboBoxItem Content="Spring"></ComboBoxItem>
+                    <ComboBoxItem Content="Autumn"></ComboBoxItem>
                 </ComboBox>
             </Grid>
         </GroupBox>

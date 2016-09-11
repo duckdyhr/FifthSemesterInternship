@@ -27,11 +27,14 @@ namespace FifthSemester
     {
         private Service service;
         private List<Student> studentList;
+        private List<Season> seasonList;
 
         //Base for the document's fonts
         private static readonly BaseFont font = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, false);
 
         private Dictionary<string, string> currentGridColumns;
+        private bool selectionChanged = false;
+
         private static readonly Dictionary<string, string> studentSupervisorColums = new Dictionary<string, string>() {
             {"Name", "name" },
             {"Class", "class" },
@@ -47,6 +50,14 @@ namespace FifthSemester
             {"Company", "Company.name" },
             {"Comments", "comments" }
         };
+
+        private static readonly Dictionary<string, string> studentsPrSeasonColumns = new Dictionary<string, string>()
+        {
+            {"Year", "" },
+            {"Season", "" },
+            {"Number", "" }
+        };
+
         public PrintsWindow()
         {
             service = Service.GetInstance;
@@ -64,89 +75,135 @@ namespace FifthSemester
 
             if (comboBxYear.SelectedItem != null)
             {
+                FillGrid();
                 comboBxSeason.IsEnabled = true;
                 comboBxSeason.Text = "Choose Season";
             }
-        }
-        private void fillGrid()
-        {
-            studentList = service.getStudentsByYear(Int32.Parse(comboBxYear.SelectedItem.ToString()));
-            if (comboBxSeason.SelectedItem != null)
-            {
-                List<Student> tempList = new List<Student>();
-                ComboBoxItem season = comboBxSeason.SelectedItem as ComboBoxItem;
-                foreach (Student s in studentList)
-                {
-                    if (s.season.Equals(season.Content.ToString()))
-                    {
-                        tempList.Add(s);
-                    }
-                }
-                studentList = tempList;
-            }
-            //listToGroupBy = studentList;
-            datagrid.ItemsSource = studentList;
         }
 
         private void comboBxSeason_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (comboBxSeason.SelectedItem != null)
             {
-                comboBxSelection.IsEnabled = true;
+                FillGrid();
             }
         }
 
+        //Use index instead of string comparison to get which selection is selected?
         private void comboBxSelection_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(comboBxSelection.SelectedItem != null)
+            if (comboBxSelection.SelectedItem != null)
             {
-                
                 ComboBoxItem selection = comboBxSelection.SelectedItem as ComboBoxItem;
-                ComboBoxItem season = comboBxSeason.SelectedItem as ComboBoxItem;
-                
                 if (selection.Content.ToString().Equals("Student company assignment"))
                 {
                     currentGridColumns = studentCompanyColumns;
-                    GenerateStudentCompanyAssignmentDG(season.Content.ToString());
-                    //listToGroupBy = tempList;
+                    selectionChanged = true;
+                    FillGrid();
+                    comboBxYear.IsEnabled = true;
                 }
                 else if (selection.Content.ToString().Equals("Student supervisor assignment"))
                 {
                     currentGridColumns = studentSupervisorColums;
-                    GenerateStudentCompanyAssignmentDG(season.Content.ToString());
-
-                }else if (selection.Content.ToString().Equals(""))
+                    selectionChanged = true;
+                    FillGrid();
+                    comboBxYear.IsEnabled = true;
+                }
+                else if (selection.Content.ToString().Equals("Students who has a company agreement"))
                 {
-
-                }else if (selection.Content.ToString().Equals(""))
+                    currentGridColumns = studentsPrSeasonColumns;
+                    selectionChanged = true;
+                    FillGrid();
+                    comboBxYear.IsEnabled = true;
+                }
+                else if (selection.Content.ToString().Equals(""))
                 {
 
                 }
-                
+                else if (selection.Content.ToString().Equals(""))
+                {
+
+                }
+                else if (selection.Content.ToString().Equals(""))
+                {
+
+                }
+
             }
         }
 
-        private void GenerateStudentCompanyAssignmentDG(string season)
+        private void GenerateDataGrid()
         {
             datagrid.Columns.Clear();
             DataGridTextColumn textColumn;
-            foreach(KeyValuePair<string, string> column in currentGridColumns)
+            foreach (KeyValuePair<string, string> column in currentGridColumns)
             {
                 textColumn = new DataGridTextColumn();
                 textColumn.Header = column.Key;
                 textColumn.Binding = new Binding(column.Value);
                 datagrid.Columns.Add(textColumn);
             }
-            studentList = service.getStudentsByYear(Int32.Parse(comboBxYear.SelectedItem.ToString()));
-            List<Student> tempList = new List<Student>();
-            foreach (Student s in studentList)
+            selectionChanged = false;
+        }
+
+        private void FillSeasonGrid()
+        {
+            if (selectionChanged)
             {
-                if (s.season.Equals(season))
-                {
-                    tempList.Add(s);
-                }
+                GenerateDataGrid();
             }
-            datagrid.ItemsSource = tempList;
+            List<Student> temp = new List<Student>();
+            int year = 2016;
+            temp = service.getStudentsByYear(year);
+            temp.Select(s => !s.Company.Equals("Erhvervsakademi Aarhus"));
+
+            
+            var s1 = new { year = 2016, season = "Autumn", number = 3};
+
+            datagrid.ItemsSource = seasonList;
+        }
+        private void FillGrid()
+        {
+            if (selectionChanged)
+            {
+                GenerateDataGrid();
+            }
+            //if year is not selected, current year is default.
+            int year;
+            if (comboBxYear.SelectedIndex < 0)
+            {
+                year = DateTime.Now.Year;
+            }
+            else
+            {
+                year = Int32.Parse(comboBxYear.SelectedItem.ToString());
+            }
+            ComboBoxItem cmbSeason = comboBxSeason.SelectedItem as ComboBoxItem;
+            string season = "";
+            if (cmbSeason != null)
+            {
+                season = season = (comboBxSeason.SelectedItem as ComboBoxItem).Content.ToString();
+            }
+
+            studentList = service.getStudentsByYear(year);
+
+            List<Student> tempList = new List<Student>();
+            if (season.Length > 0)
+            {
+                foreach (Student s in studentList)
+                {
+                    if (s.season.Equals(season))
+                    {
+                        tempList.Add(s);
+                    }
+                }
+                datagrid.ItemsSource = tempList;
+            }
+            else
+            {
+                datagrid.ItemsSource = studentList;
+
+            }
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -172,14 +229,14 @@ namespace FifthSemester
 
                 doc.Open();
 
-                
+
                 iTextSharp.text.Paragraph paragHeading = new iTextSharp.text.Paragraph("Heading", headingFont);
                 doc.Add(paragHeading);
 
                 if (studentList != null)
                 {
                     PdfPTable table = new PdfPTable(13);
-                    int[] widths = new int[] {1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 2 };
+                    int[] widths = new int[] { 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 2 };
                     table.SetWidths(widths);
 
                     //Move headings to list instead?
@@ -229,7 +286,7 @@ namespace FifthSemester
                 lblTest.Content = "Failed to save";
                 throw de;
             }
-            catch(IOException ie)
+            catch (IOException ie)
             {
                 lblTest.Content = "Failed to save";
                 throw ie;
@@ -239,15 +296,6 @@ namespace FifthSemester
                 doc.Close();
                 writer?.Close();
             }
-        }
-
-        private void btnStudentSuper_Click(object sender, RoutedEventArgs e)
-        {
-            datagrid.Columns.Clear();
-
-            //DGStudents.ItemsSource = new List<string>();
-
-            lblTest.Content = "studentsuper clicked";
         }
 
         private string studentStringRepresentation(Student s)
@@ -287,6 +335,12 @@ namespace FifthSemester
             //SaveFileDialog sfd = new SaveFileDialog();
         }
 
-        
+
+    }
+    class Season
+    {
+        public int Year { get; set; }
+        public string SeasonName { get; set; }
+        public int Number { get; set; }
     }
 }
