@@ -27,7 +27,6 @@ namespace FifthSemester
     {
         private Service service;
         private List<Student> studentList;
-        private List<Season> seasonList;
 
         //Base for the document's fonts
         private static readonly BaseFont font = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, false);
@@ -53,9 +52,9 @@ namespace FifthSemester
 
         private static readonly Dictionary<string, string> studentsPrSeasonColumns = new Dictionary<string, string>()
         {
-            {"Year", "" },
-            {"Season", "" },
-            {"Number", "" }
+            {"Year", "year" },
+            {"Season", "season" },
+            {"Number", "count" }
         };
 
         public PrintsWindow()
@@ -75,7 +74,7 @@ namespace FifthSemester
 
             if (comboBxYear.SelectedItem != null)
             {
-                FillGrid();
+                FillStudentGrid(); //Or fillSeasonGrid!
                 comboBxSeason.IsEnabled = true;
                 comboBxSeason.Text = "Choose Season";
             }
@@ -85,7 +84,7 @@ namespace FifthSemester
         {
             if (comboBxSeason.SelectedItem != null)
             {
-                FillGrid();
+                FillStudentGrid(); //Or fillSeasonGrid!
             }
         }
 
@@ -99,26 +98,29 @@ namespace FifthSemester
                 {
                     currentGridColumns = studentCompanyColumns;
                     selectionChanged = true;
-                    FillGrid();
+                    FillStudentGrid();
                     comboBxYear.IsEnabled = true;
                 }
                 else if (selection.Content.ToString().Equals("Student supervisor assignment"))
                 {
                     currentGridColumns = studentSupervisorColums;
                     selectionChanged = true;
-                    FillGrid();
+                    FillStudentGrid();
                     comboBxYear.IsEnabled = true;
                 }
                 else if (selection.Content.ToString().Equals("Students who has a company agreement"))
                 {
                     currentGridColumns = studentsPrSeasonColumns;
                     selectionChanged = true;
-                    FillGrid();
+                    FillSeasonGrid();
                     comboBxYear.IsEnabled = true;
                 }
-                else if (selection.Content.ToString().Equals(""))
+                else if (selection.Content.ToString().Equals("Students who have EAAA or none listed as company"))
                 {
-
+                    currentGridColumns = studentsPrSeasonColumns;
+                    selectionChanged = true;
+                    FillSeasonGrid();
+                    comboBxYear.IsEnabled = true;
                 }
                 else if (selection.Content.ToString().Equals(""))
                 {
@@ -152,17 +154,16 @@ namespace FifthSemester
             {
                 GenerateDataGrid();
             }
-            List<Student> temp = new List<Student>();
+
             int year = 2016;
-            temp = service.getStudentsByYear(year);
-            temp.Select(s => !s.Company.Equals("Erhvervsakademi Aarhus"));
-
-            
-            var s1 = new { year = 2016, season = "Autumn", number = 3};
-
-            datagrid.ItemsSource = seasonList;
+            var result = service.getStudentsByYear(year)
+                .Where(s => s.CompanyID == null || s.Company.name.Equals("Erhvervsakademi Aarhus"))
+                .GroupBy(s => s.season)
+                .Select(list => new { year = list.FirstOrDefault().year, season = list.FirstOrDefault().season, count = list.Count() })
+                .ToList();
+            datagrid.ItemsSource = result;
         }
-        private void FillGrid()
+        private void FillStudentGrid()
         {
             if (selectionChanged)
             {
@@ -334,13 +335,12 @@ namespace FifthSemester
             //Or:
             //SaveFileDialog sfd = new SaveFileDialog();
         }
-
-
     }
-    class Season
+
+    interface GridState
     {
-        public int Year { get; set; }
-        public string SeasonName { get; set; }
-        public int Number { get; set; }
+        void seasonChanged();
+        void yearChanged();
+        void fillGrid();
     }
 }

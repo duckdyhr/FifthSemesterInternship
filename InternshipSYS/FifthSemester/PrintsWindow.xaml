@@ -35,20 +35,20 @@
         <GroupBox Header="Select" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
             <Grid HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="75"/>
+                    <ColumnDefinition Width="300"/>
                     <ColumnDefinition Width="50"/>
-                    <ColumnDefinition Width="100*"/>
-                    <ColumnDefinition Width="75"/>
-                    <ColumnDefinition Width="108*"/>
-                    <ColumnDefinition Width="75"/>
-                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="150*"/>
+                    <ColumnDefinition Width="50"/>
+                    <ColumnDefinition Width="150*"/>
                 </Grid.ColumnDefinitions>
 
                 <Label VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,16">Selection:</Label>
-                <ComboBox Name="comboBxSelection" Grid.Column="1" Height="25" Width="100" Text="Choose Selection" IsEditable="True" IsReadOnly="True" IsEnabled="True" Margin="0,16" SelectionChanged="comboBxSelection_SelectionChanged">
+                <ComboBox Name="comboBxSelection" Grid.Column="1" Height="25" HorizontalContentAlignment="Stretch" Text="Choose Selection" IsEditable="True" IsReadOnly="True" IsEnabled="True" Margin="0,16" SelectionChanged="comboBxSelection_SelectionChanged">
                     <ComboBoxItem Content="Student supervisor assignment"></ComboBoxItem>
                     <ComboBoxItem Content="Student company assignment"></ComboBoxItem>
                     <ComboBoxItem Content="Students who has a company agreement"></ComboBoxItem>
-                    <ComboBoxItem Content="Students who have EAAA listed as company"></ComboBoxItem>
+                    <ComboBoxItem Content="Students who have EAAA or none listed as company"></ComboBoxItem>
                     <ComboBoxItem Content="Main project overview Signe"></ComboBoxItem>
                     <ComboBoxItem Content="Companies with contacts"></ComboBoxItem>
                 </ComboBox>
