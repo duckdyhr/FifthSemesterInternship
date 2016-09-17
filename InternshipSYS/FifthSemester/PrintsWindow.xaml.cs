@@ -17,6 +17,7 @@ using System.Xml;
 using System.IO;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using FifthSemester.StatePatter;
 
 namespace FifthSemester
 {
@@ -26,30 +27,21 @@ namespace FifthSemester
     public partial class PrintsWindow : Window
     {
         private Service service;
-        private List<Student> studentList;
 
         //Base for the document's fonts
         private static readonly BaseFont font = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, false);
 
-        private Dictionary<string, string> currentGridColumns;
-        private bool selectionChanged = false;
+        //private Dictionary<string, string> currentGridColumns;
+        public Dictionary<string, string> currentGridColumns { get; set; }
 
-        private static readonly Dictionary<string, string> studentSupervisorColums = new Dictionary<string, string>() {
-            {"Name", "name" },
-            {"Class", "class" },
-            {"Supervisor", "Supervisor.name" },
-            {"Email", "email" },
-            {"Company", "Company.name" },
-            {"Comments", "comments" }
-        };
-        private static readonly Dictionary<string, string> studentCompanyColumns = new Dictionary<string, string>()
-        {
-            {"Name", "name" },
-            {"Class", "class"},
-            {"Company", "Company.name" },
-            {"Comments", "comments" }
-        };
+        public bool SelectionChanged { get; set; }
 
+        private SelectionState selectionState;
+
+        private static string[] selection = new string[] { "Student supervisor assignment", "Student company assignment",
+            "Students who has a company agreement", "Students who have EAAA or none listed as company",
+            "Main project overview Signe", "Companies with contacts" };
+        
         private static readonly Dictionary<string, string> studentsPrSeasonColumns = new Dictionary<string, string>()
         {
             {"Year", "year" },
@@ -61,7 +53,14 @@ namespace FifthSemester
         {
             service = Service.GetInstance;
             InitializeComponent();
+            selectionState = new StudentSupervisorCompanyState(this);
             fillCombobxYear();
+            comboBxSelection.ItemsSource = selection;
+        }
+
+        public Service GetService()
+        {
+            return service;
         }
 
         private void fillCombobxYear()
@@ -74,7 +73,7 @@ namespace FifthSemester
 
             if (comboBxYear.SelectedItem != null)
             {
-                FillStudentGrid(); //Or fillSeasonGrid!
+                selectionState.YearChanged();
                 comboBxSeason.IsEnabled = true;
                 comboBxSeason.Text = "Choose Season";
             }
@@ -84,7 +83,7 @@ namespace FifthSemester
         {
             if (comboBxSeason.SelectedItem != null)
             {
-                FillStudentGrid(); //Or fillSeasonGrid!
+                selectionState.SeasonChanged();
             }
         }
 
@@ -93,40 +92,40 @@ namespace FifthSemester
         {
             if (comboBxSelection.SelectedItem != null)
             {
-                ComboBoxItem selection = comboBxSelection.SelectedItem as ComboBoxItem;
-                if (selection.Content.ToString().Equals("Student company assignment"))
+                string sel = selection[comboBxSelection.SelectedIndex];
+                if (sel.Equals("Student company assignment"))
                 {
-                    currentGridColumns = studentCompanyColumns;
-                    selectionChanged = true;
-                    FillStudentGrid();
+                    selectionState = new StudentCompanyState(this);
+                    SelectionChanged = true;
+                    FillGrid();
                     comboBxYear.IsEnabled = true;
                 }
-                else if (selection.Content.ToString().Equals("Student supervisor assignment"))
+                else if (sel.Equals("Student supervisor assignment"))
                 {
-                    currentGridColumns = studentSupervisorColums;
-                    selectionChanged = true;
-                    FillStudentGrid();
+                    selectionState = new StudentSupervisorCompanyState(this);
+                    SelectionChanged = true;
+                    FillGrid();
                     comboBxYear.IsEnabled = true;
                 }
-                else if (selection.Content.ToString().Equals("Students who has a company agreement"))
+                else if (sel.Equals("Students who has a company agreement"))
                 {
                     currentGridColumns = studentsPrSeasonColumns;
-                    selectionChanged = true;
+                    SelectionChanged = true;
                     FillSeasonGrid();
                     comboBxYear.IsEnabled = true;
                 }
-                else if (selection.Content.ToString().Equals("Students who have EAAA or none listed as company"))
+                else if (sel.Equals("Students who have EAAA or none listed as company"))
                 {
                     currentGridColumns = studentsPrSeasonColumns;
-                    selectionChanged = true;
+                    SelectionChanged = true;
                     FillSeasonGrid();
                     comboBxYear.IsEnabled = true;
                 }
-                else if (selection.Content.ToString().Equals(""))
+                else if (sel.Equals(""))
                 {
 
                 }
-                else if (selection.Content.ToString().Equals(""))
+                else if (sel.Equals(""))
                 {
 
                 }
@@ -134,23 +133,23 @@ namespace FifthSemester
             }
         }
 
-        private void GenerateDataGrid()
+        public void GenerateDataGrid()
         {
             datagrid.Columns.Clear();
             DataGridTextColumn textColumn;
-            foreach (KeyValuePair<string, string> column in currentGridColumns)
+            foreach (KeyValuePair<string, string> column in selectionState.GetColumns())
             {
                 textColumn = new DataGridTextColumn();
                 textColumn.Header = column.Key;
                 textColumn.Binding = new Binding(column.Value);
                 datagrid.Columns.Add(textColumn);
             }
-            selectionChanged = false;
+            SelectionChanged = false;
         }
 
         private void FillSeasonGrid()
         {
-            if (selectionChanged)
+            if (SelectionChanged)
             {
                 GenerateDataGrid();
             }
@@ -163,9 +162,10 @@ namespace FifthSemester
                 .ToList();
             datagrid.ItemsSource = result;
         }
-        private void FillStudentGrid()
+
+        private void FillGrid()
         {
-            if (selectionChanged)
+            if (SelectionChanged)
             {
                 GenerateDataGrid();
             }
@@ -174,6 +174,7 @@ namespace FifthSemester
             if (comboBxYear.SelectedIndex < 0)
             {
                 year = DateTime.Now.Year;
+                //Set current year selected in combobox as well
             }
             else
             {
@@ -185,26 +186,7 @@ namespace FifthSemester
             {
                 season = season = (comboBxSeason.SelectedItem as ComboBoxItem).Content.ToString();
             }
-
-            studentList = service.getStudentsByYear(year);
-
-            List<Student> tempList = new List<Student>();
-            if (season.Length > 0)
-            {
-                foreach (Student s in studentList)
-                {
-                    if (s.season.Equals(season))
-                    {
-                        tempList.Add(s);
-                    }
-                }
-                datagrid.ItemsSource = tempList;
-            }
-            else
-            {
-                datagrid.ItemsSource = studentList;
-
-            }
+            selectionState.SetItemsSource(year, season);
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -233,7 +215,7 @@ namespace FifthSemester
 
                 iTextSharp.text.Paragraph paragHeading = new iTextSharp.text.Paragraph("Heading", headingFont);
                 doc.Add(paragHeading);
-
+                List<Student> studentList = new List<Student>();
                 if (studentList != null)
                 {
                     PdfPTable table = new PdfPTable(13);
@@ -335,12 +317,5 @@ namespace FifthSemester
             //Or:
             //SaveFileDialog sfd = new SaveFileDialog();
         }
-    }
-
-    interface GridState
-    {
-        void seasonChanged();
-        void yearChanged();
-        void fillGrid();
     }
 }

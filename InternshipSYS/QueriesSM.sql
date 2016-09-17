@@ -1,5 +1,6 @@
 ﻿--*****************************
 --StudentSupervisorAssignment
+--Student-Supervisor-Company information
 --*****************************
 select substring(st.name, 1, 30) as Name, 
 	st.class as Class, 
