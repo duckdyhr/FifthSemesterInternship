@@ -40,7 +40,7 @@ from student st, Company c
   group by st.year, st.season
   order by st.year, st.season DESC
 
- --How many students per season have Erhvervsakademi Århus registrered as their comapany
+--How many students per season have Erhvervsakademi Århus registrered as their comapany
 select st.year, st.season, count(*)
 from student st, Company c
   where st.CompanyID = c.id
@@ -49,7 +49,7 @@ from student st, Company c
     order by st.year, st.season DESC
 	
 --*****************************
---MainProjectOverviewSigne
+--MainProjectOverviewSecretary
 --*****************************
 
 select substring(st.name, 1, 40) as name, 

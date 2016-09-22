@@ -317,6 +317,13 @@ namespace SERVICE
             return DBX.MainProjects.ToList();
         }
 
+        public List<MainProject> GetMainProjectByYear(int year)
+        {
+            List<MainProject> result = DBX.MainProjects
+                .Where(mp => mp.year.Equals(year))
+                .ToList();
+            return result;
+        }
         public void updateMainProject(MainProject mainproject)
         {
             if (DBX.MainProjects.Contains(mainproject))

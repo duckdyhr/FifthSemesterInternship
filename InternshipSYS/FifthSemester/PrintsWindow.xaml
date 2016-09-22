@@ -62,20 +62,6 @@
             
             <DataGrid Name="datagrid" AutoGenerateColumns="False" IsEnabled="True" SelectionMode="Single" AlternatingRowBackground="lightGray" AlternationCount="2" Height="402">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding name}" IsReadOnly="True"/>
-
-                    <DataGridTextColumn Header="Email" Binding="{Binding email}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Phone" Binding="{Binding phone}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Application" Binding="{Binding application}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Contract" Binding="{Binding contract}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Learning Objectives" Binding="{Binding leaningobjectives}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Address" Binding="{Binding address}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="ZipCode" Binding="{Binding zipcode}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Class" Binding="{Binding class}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Year" Binding="{Binding year}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Season" Binding="{Binding season}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Company" Binding="{Binding Company.name}" IsReadOnly="True"/>
-                    <DataGridTextColumn Header="Supervisor" Binding="{Binding Supervisor.name}" IsReadOnly="True"/>
                 </DataGrid.Columns>
 
                 <DataGrid.GroupStyle>

@@ -39,15 +39,8 @@ namespace FifthSemester
         private SelectionState selectionState;
 
         private static string[] selection = new string[] { "Student supervisor assignment", "Student company assignment",
-            "Students who has a company agreement", "Students who have EAAA or none listed as company",
-            "Main project overview Signe", "Companies with contacts" };
-        
-        private static readonly Dictionary<string, string> studentsPrSeasonColumns = new Dictionary<string, string>()
-        {
-            {"Year", "year" },
-            {"Season", "season" },
-            {"Number", "count" }
-        };
+            "Students who have a company agreement", "Students who have EAAA or none listed as company",
+            "Main project overview Secretary", "Companies with contacts" };
 
         public PrintsWindow()
         {
@@ -73,7 +66,14 @@ namespace FifthSemester
 
             if (comboBxYear.SelectedItem != null)
             {
-                selectionState.YearChanged();
+                int year = Int32.Parse(comboBxYear.SelectedItem.ToString());
+                ComboBoxItem cmbSeason = comboBxSeason.SelectedItem as ComboBoxItem;
+                string season = "";
+                if (cmbSeason != null)
+                {
+                    season = season = (comboBxSeason.SelectedItem as ComboBoxItem).Content.ToString();
+                }
+                selectionState.YearChanged(year, season);
                 comboBxSeason.IsEnabled = true;
                 comboBxSeason.Text = "Choose Season";
             }
@@ -83,49 +83,58 @@ namespace FifthSemester
         {
             if (comboBxSeason.SelectedItem != null)
             {
-                selectionState.SeasonChanged();
+                int year = Int32.Parse(comboBxYear.SelectedItem.ToString());
+                string season = (comboBxSeason.SelectedItem as ComboBoxItem).Content.ToString();
+                selectionState.SeasonChanged(year, season);
             }
         }
-
-        //Use index instead of string comparison to get which selection is selected?
+        
         private void comboBxSelection_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (comboBxSelection.SelectedItem != null)
             {
-                string sel = selection[comboBxSelection.SelectedIndex];
-                if (sel.Equals("Student company assignment"))
+                //"Student supervisor assignment"
+                if (comboBxSelection.SelectedIndex == 0)
                 {
-                    selectionState = new StudentCompanyState(this);
+                    selectionState = new StudentCompanyAssignmentState(this);
                     SelectionChanged = true;
                     FillGrid();
                     comboBxYear.IsEnabled = true;
                 }
-                else if (sel.Equals("Student supervisor assignment"))
+                //"Student company assignment"
+                else if (comboBxSelection.SelectedIndex == 1)
                 {
                     selectionState = new StudentSupervisorCompanyState(this);
                     SelectionChanged = true;
                     FillGrid();
                     comboBxYear.IsEnabled = true;
                 }
-                else if (sel.Equals("Students who has a company agreement"))
+                //"Students who has a company agreement"
+                else if (comboBxSelection.SelectedIndex == 3)
                 {
-                    currentGridColumns = studentsPrSeasonColumns;
+                    selectionState = new StudentsAssignedCompanyState(this);
                     SelectionChanged = true;
-                    FillSeasonGrid();
+                    FillGrid();
                     comboBxYear.IsEnabled = true;
                 }
-                else if (sel.Equals("Students who have EAAA or none listed as company"))
+                //"Students who have EAAA or none listed as company"
+                else if (comboBxSelection.SelectedIndex == 4)
                 {
-                    currentGridColumns = studentsPrSeasonColumns;
+                    selectionState = new StudentsAtEAAA(this);
                     SelectionChanged = true;
-                    FillSeasonGrid();
+                    FillGrid();
                     comboBxYear.IsEnabled = true;
                 }
-                else if (sel.Equals(""))
+                //"Main project overview Secretary"
+                else if (comboBxSelection.SelectedIndex == 5)
                 {
-
+                    selectionState = new MainProjectOverviewSecretaryState(this);
+                    SelectionChanged = true;
+                    FillGrid();
+                    comboBxYear.IsEnabled = true;
                 }
-                else if (sel.Equals(""))
+                //"Companies with contacts"
+                else if (comboBxSelection.SelectedIndex == 6)
                 {
 
                 }
@@ -145,22 +154,6 @@ namespace FifthSemester
                 datagrid.Columns.Add(textColumn);
             }
             SelectionChanged = false;
-        }
-
-        private void FillSeasonGrid()
-        {
-            if (SelectionChanged)
-            {
-                GenerateDataGrid();
-            }
-
-            int year = 2016;
-            var result = service.getStudentsByYear(year)
-                .Where(s => s.CompanyID == null || s.Company.name.Equals("Erhvervsakademi Aarhus"))
-                .GroupBy(s => s.season)
-                .Select(list => new { year = list.FirstOrDefault().year, season = list.FirstOrDefault().season, count = list.Count() })
-                .ToList();
-            datagrid.ItemsSource = result;
         }
 
         private void FillGrid()
@@ -319,3 +312,4 @@ namespace FifthSemester
         }
     }
 }
+ 
