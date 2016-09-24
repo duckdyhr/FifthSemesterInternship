@@ -32,6 +32,7 @@ namespace FifthSemester.StatePatter
         }
     }
 
+    //1: "Student company assignment"
     public class StudentSupervisorCompanyState : SelectionState
     {
         private static readonly Dictionary<string, string> studentSupervisorColums = new Dictionary<string, string>() {
@@ -53,7 +54,8 @@ namespace FifthSemester.StatePatter
 
         public override void SetItemsSource(int year, string season)
         {
-            context.datagrid.ItemsSource = GetStudentList(year, season);
+            var list = GetStudentList(year, season);
+            context.datagrid.ItemsSource = list;
         }
 
         public override void YearChanged(int year, string season)
@@ -65,6 +67,8 @@ namespace FifthSemester.StatePatter
             context.datagrid.ItemsSource = GetStudentList(year, season);
         }
     }
+
+    //0: "Student supervisor assignment"
     class StudentCompanyAssignmentState : SelectionState
     {
         private static readonly Dictionary<string, string> studentCompanyColumns = new Dictionary<string, string>()
@@ -99,6 +103,7 @@ namespace FifthSemester.StatePatter
         }
     }
 
+    //2: "Students who has a company agreement"
     class StudentsAssignedCompanyState : SelectionState
     {
         private static readonly Dictionary<string, string> studentsPrSeasonColumns = new Dictionary<string, string>()
@@ -119,7 +124,7 @@ namespace FifthSemester.StatePatter
         public override void SetItemsSource(int year, string season)
         {
             var result = context.GetService().getStudentsByYear(year)
-                .Where(s => s.CompanyID == null || s.Company.name.Equals("Erhvervsakademi Aarhus"))
+                .Where(s => s.Company != null && !s.Company.name.Equals("Erhvervsakademi Aarhus"))
                 .GroupBy(s => s.season)
                 .Select(list => new { year = list.FirstOrDefault().year, season = list.FirstOrDefault().season, count = list.Count() })
                 .ToList();
@@ -136,6 +141,7 @@ namespace FifthSemester.StatePatter
         }
     }
 
+    //3: "Students who have EAAA or none listed as company"
     class StudentsAtEAAA : SelectionState
     {
         private static readonly Dictionary<string, string> studentsPrSeasonColumns = new Dictionary<string, string>()
@@ -173,6 +179,7 @@ namespace FifthSemester.StatePatter
         }
     }
 
+    //4: "Main project overview Secretary"
     class MainProjectOverviewSecretaryState : SelectionState
     {
         private static readonly Dictionary<string, string> columns = new Dictionary<string, string>()
@@ -219,6 +226,39 @@ namespace FifthSemester.StatePatter
         public override void SeasonChanged(int year, string season)
         {
             SetItemsSource(year, season);
+        }
+    }
+    class CompaniesWithContactState : SelectionState
+    {
+        private static readonly Dictionary<string, string> columns = new Dictionary<string, string>()
+        {
+            {"Company name", "name" },
+            {"Adress", "adress" },
+            {"Zipcode", "zipcode" },
+            {"City", "city" },
+            {"Web site", "website" },
+        };
+        public CompaniesWithContactState(PrintsWindow context) : base(context)
+        {
+        }
+
+        public override Dictionary<string, string> GetColumns()
+        {
+            return columns;
+        }
+
+        public override void SetItemsSource(int year, string season)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void YearChanged(int year, string season)
+        {
+            throw new NotImplementedException();
+        }
+        public override void SeasonChanged(int year, string season)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -38,9 +38,11 @@ namespace FifthSemester
 
         private SelectionState selectionState;
 
-        private static string[] selection = new string[] { "Student supervisor assignment", "Student company assignment",
-            "Students who have a company agreement", "Students who have EAAA or none listed as company",
-            "Main project overview Secretary", "Companies with contacts" };
+        private static string[] selection = new string[] { "0 Student supervisor assignment", "1 Student company assignment",
+            "2 Students who have a company agreement", "3 Students who have EAAA listed as company",
+            "4 Main project overview Secretary", "5 Companies with contacts" };
+
+        private static readonly string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
         public PrintsWindow()
         {
@@ -93,10 +95,10 @@ namespace FifthSemester
         {
             if (comboBxSelection.SelectedItem != null)
             {
-                //"Student supervisor assignment"
+                //"Student supervisor Company "
                 if (comboBxSelection.SelectedIndex == 0)
                 {
-                    selectionState = new StudentCompanyAssignmentState(this);
+                    selectionState = new StudentSupervisorCompanyState(this);
                     SelectionChanged = true;
                     FillGrid();
                     comboBxYear.IsEnabled = true;
@@ -104,21 +106,21 @@ namespace FifthSemester
                 //"Student company assignment"
                 else if (comboBxSelection.SelectedIndex == 1)
                 {
-                    selectionState = new StudentSupervisorCompanyState(this);
+                    selectionState = new StudentCompanyAssignmentState(this);
                     SelectionChanged = true;
                     FillGrid();
                     comboBxYear.IsEnabled = true;
                 }
                 //"Students who has a company agreement"
-                else if (comboBxSelection.SelectedIndex == 3)
+                else if (comboBxSelection.SelectedIndex == 2)
                 {
                     selectionState = new StudentsAssignedCompanyState(this);
                     SelectionChanged = true;
                     FillGrid();
                     comboBxYear.IsEnabled = true;
                 }
-                //"Students who have EAAA or none listed as company"
-                else if (comboBxSelection.SelectedIndex == 4)
+                //"Students who have EAAA listed as company"
+                else if (comboBxSelection.SelectedIndex == 3)
                 {
                     selectionState = new StudentsAtEAAA(this);
                     SelectionChanged = true;
@@ -126,7 +128,7 @@ namespace FifthSemester
                     comboBxYear.IsEnabled = true;
                 }
                 //"Main project overview Secretary"
-                else if (comboBxSelection.SelectedIndex == 5)
+                else if (comboBxSelection.SelectedIndex == 4)
                 {
                     selectionState = new MainProjectOverviewSecretaryState(this);
                     SelectionChanged = true;
@@ -134,11 +136,13 @@ namespace FifthSemester
                     comboBxYear.IsEnabled = true;
                 }
                 //"Companies with contacts"
-                else if (comboBxSelection.SelectedIndex == 6)
+                else if (comboBxSelection.SelectedIndex == 5)
                 {
-
+                    selectionState = new CompaniesWithContactState(this);
+                    SelectionChanged = true;
+                    FillGrid();
+                    comboBxYear.IsEnabled = true;
                 }
-
             }
         }
 
@@ -189,7 +193,7 @@ namespace FifthSemester
 
         private void btnSaveAsPdf_Click(object sender, RoutedEventArgs e)
         {
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
 
             //Document and PdfWriter are from iTextSharp import
             Document doc = new Document(iTextSharp.text.PageSize.A4.Rotate(), 10, 10, 10, 10);
@@ -197,6 +201,9 @@ namespace FifthSemester
             Font headingFont = new Font(font, 24, Font.NORMAL, BaseColor.RED);
             Font tableheadFont = new Font(font, 12, Font.BOLD);
             Font tablecellFont = new Font(font, 12);
+
+            var columns = selectionState.GetColumns();
+            var data = datagrid.Items;
 
             PdfWriter writer = null;
             try
@@ -208,45 +215,22 @@ namespace FifthSemester
 
                 iTextSharp.text.Paragraph paragHeading = new iTextSharp.text.Paragraph("Heading", headingFont);
                 doc.Add(paragHeading);
-                List<Student> studentList = new List<Student>();
-                if (studentList != null)
+                //List<Student> studentList = new List<Student>();
+                if (data != null)
                 {
-                    PdfPTable table = new PdfPTable(13);
+                    PdfPTable table = new PdfPTable(columns.Count);
                     int[] widths = new int[] { 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 2 };
                     table.SetWidths(widths);
-
-                    //Move headings to list instead?
-                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Name", tableheadFont)));
-                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Email", tableheadFont)));
-                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Phone", tableheadFont)));
-                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Application", tableheadFont)));
-                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Contract", tableheadFont)));
-                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Learning Objectives", tableheadFont)));
-                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Address", tableheadFont)));
-                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Zipcode", tableheadFont)));
-                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Class", tableheadFont)));
-                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Year", tableheadFont)));
-                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Season", tableheadFont)));
-                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Company", tableheadFont)));
-                    table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph("Supervisor", tableheadFont)));
-
-                    foreach (Student s in studentList)
+                    foreach(KeyValuePair<string, string> column in columns)
+                    {
+                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(column.Key, tableheadFont)));
+                    }
+                    
+                    foreach (var row in data)
                     {
                         //iTextSharp.text.Paragraph p = new iTextSharp.text.Paragraph(studentStringRepresentation(s) + "\n");
                         //doc.Add(p);
-                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.name, tablecellFont)));
-                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.email, tablecellFont)));
-                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.phone, tablecellFont)));
-                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.application.ToString(), tablecellFont)));
-                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.contract.ToString(), tablecellFont)));
-                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.leaningobjectives.ToString(), tablecellFont)));
-                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.address, tablecellFont)));
-                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.zipcode + "", tablecellFont)));
-                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.@class, tablecellFont)));
-                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.year + "", tablecellFont)));
-                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.season, tablecellFont)));
-                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.Company.name, tablecellFont)));
-                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.Supervisor.name, tablecellFont)));
+                        //table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.name, tablecellFont)));
                     }
                     doc.Add(table);
                 }
@@ -293,6 +277,8 @@ namespace FifthSemester
             //    pDialog.PrintDocument(fixedDocSeq.DocumentPaginator, "Test print job");
             //}
         }
+
+        //Brug til comma separerert list!!
         private void SaveToTxt()
         {
             //using (StreamWriter outputFile = new StreamWriter(path + @"\TestToTxt.txt"))
@@ -309,6 +295,124 @@ namespace FifthSemester
             //lblTest.Content = "Saving to .txt...";
             //Or:
             //SaveFileDialog sfd = new SaveFileDialog();
+        }
+
+        private void SaveToCSV()
+        {
+            var csv = new StringBuilder();
+
+            var columns = datagrid.Columns;
+            csv.AppendLine(string.Join(",", columns.Select(column => "\"" + column.Header + "\"").ToArray()));
+            
+            //foreach (Type row in datagrid.Items)
+            //{
+            //    var cells = row.GetProperties();
+            //    csv.AppendLine(string.Join(",", cells.Select(cell => "\"" + cell.value() + "\"").ToArray()));
+            //}
+
+            lblTest.Content = csv;
+        }
+
+        static StringBuilder CreateCSV<T>(IEnumerable<T> data)
+        {
+            StringBuilder builder = new StringBuilder();
+            var properties = typeof(T).GetProperties();
+
+            foreach (var prop in properties)
+            {
+                builder.Append(prop.Name).Append(", ");
+            }
+
+            builder.Remove(builder.Length - 2, 2).AppendLine();
+
+            foreach (var row in data)
+            {
+                foreach (var prop in properties)
+                {
+                    builder.Append(prop.GetValue(row, null)).Append(", ");
+                }
+
+                builder.Remove(builder.Length - 2, 2).AppendLine();
+            }
+
+            return builder;
+        }
+
+        private void SaveToCSV2()
+        {
+            DataGrid dg = datagrid;
+            dg.SelectAllCells();
+            dg.ClipboardCopyMode = DataGridClipboardCopyMode.IncludeHeader;
+            ApplicationCommands.Copy.Execute(null, dg);
+            dg.UnselectAllCells();
+            String Clipboardresult = (string)Clipboard.GetData(DataFormats.CommaSeparatedValue);
+
+            StreamWriter outputFile = new StreamWriter(path + @"\ToTxt.txt");
+            outputFile.WriteLine(Clipboardresult);
+            outputFile.Close();
+        }
+
+        public void OnExportGridToCSV(object sender, System.EventArgs e)
+        {
+            //// Create the CSV file to which grid data will be exported.
+            //StreamWriter outputFile = new StreamWriter(path + @"\ToTxt.txt");
+            //// First we will write the headers.
+            //DataGrid dt = datagrid.Columns
+
+            //int iColCount = dt.Columns.Count;
+            //for (int i = 0; i < iColCount; i++)
+            //{
+            //    sw.Write(dt.Columns[i]);
+            //    if (i < iColCount - 1)
+            //    {
+            //        sw.Write(",");
+            //    }
+            //}
+            //sw.Write(sw.NewLine);
+            //// Now write all the rows.
+            //foreach (DataRow dr in dt.Rows)
+            //{
+            //    for (int i = 0; i < iColCount; i++)
+            //    {
+            //        if (!Convert.IsDBNull(dr[i]))
+            //        {
+            //            sw.Write(dr[i].ToString());
+            //        }
+            //        if (i < iColCount - 1)
+            //        {
+            //            sw.Write(System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator);
+            //        }
+            //    }
+            //    sw.Write(sw.NewLine);
+            //}
+            //outputFile.Close();
+        }
+
+        private StringBuilder SaveToCSV3()
+        {
+            StringBuilder csv = new StringBuilder();
+            //Append headers...
+            foreach(var row in datagrid.Items)
+            {
+                var props = row.GetType().GetProperties();
+                foreach(var prop in props)
+                {
+                    var value = prop.GetValue(row, null);
+                    csv.Append(value);
+                    csv.Append(" ");
+                }
+                csv.AppendLine();
+            }
+            return csv;
+        }
+        private void btnSaveAsCSV_Click(object sender, RoutedEventArgs e)
+        {
+            StringBuilder result = SaveToCSV3();
+            StreamWriter outputFile = new StreamWriter(path + @"\ToTxt.txt");
+            outputFile.WriteLine(result);
+            outputFile.Close();
+
+            SaveToCSV3();
         }
     }
 }

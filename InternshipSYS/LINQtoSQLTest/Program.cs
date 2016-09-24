@@ -82,6 +82,29 @@ namespace LINQtoSQLTest
             Console.WriteLine("temp7 Students ordered by main project");
             temp7.ToList()
                 .ForEach(s => Console.WriteLine( "\t" + s.name + " " + s?.@class + " Gr: " + s.groupnr + " " + s.title));
+            
+            var groupby1 = dbx.Students
+                //.Where(s => s.CompanyID == null || s.Company.name.Equals("Erhvervsakademi Aarhus"))
+                .Where(s => !s.Company.name.Equals("Erhvervsakademi Aarhus"))
+                .GroupBy(s => s.season, s => s)
+                .ToList();
+
+            Console.WriteLine("\nGroupBy1 size: " + groupby1.Count);
+            foreach(IGrouping<string, Student> list in groupby1)
+            {
+                Console.WriteLine(list.Key);
+                foreach(Student st in list)
+                {
+                    Console.WriteLine("\t {0}", st.name + " " + st.season);
+                }
+            }
+
+            var groupby2 = dbx.Students.Where(s => !s.Company.name.Equals("Erhvervsakademi Aarhus")).ToList();
+            Console.WriteLine("\nGroupBy2 size: " + groupby2.Count);
+            foreach(Student st in groupby2)
+            {
+                Console.WriteLine("\t {0}", st.name + " " + st.season);
+            }
             Console.Read();
         }
     }
