@@ -74,7 +74,7 @@
     <Compile Include="PrintsWindow.xaml.cs">
       <DependentUpon>PrintsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="StatePatter\SelectionState.cs" />
+    <Compile Include="StatePattern\SelectionState.cs" />
     <Compile Include="StudentDialog.xaml.cs">
       <DependentUpon>StudentDialog.xaml</DependentUpon>
     </Compile>

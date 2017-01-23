@@ -4,8 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace FifthSemester.StatePatter
+namespace FifthSemester.StatePattern
 {
+    /// <summary>
+    /// Defines which state the DataGrid of PrintsWindow is - as in which query the user has selected.
+    /// An instance of SelectionState is made for each available query.
+    /// </summary>
+
     public abstract class SelectionState
     {
         protected PrintsWindow context;

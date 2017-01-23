@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace LINQtoSQLTest
 {
+    /// <summary>
+    /// This test class is used for easy testing of database queries with LINQ
+    /// </summary>
     public class Program
     {
         static void Main(string[] args)

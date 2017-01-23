@@ -17,7 +17,7 @@ using System.Xml;
 using System.IO;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
-using FifthSemester.StatePatter;
+using FifthSemester.StatePattern;
 
 namespace FifthSemester
 {
@@ -193,8 +193,6 @@ namespace FifthSemester
 
         private void btnSaveAsPdf_Click(object sender, RoutedEventArgs e)
         {
-
-
             //Document and PdfWriter are from iTextSharp import
             Document doc = new Document(iTextSharp.text.PageSize.A4.Rotate(), 10, 10, 10, 10);
 
@@ -391,15 +389,16 @@ namespace FifthSemester
         private StringBuilder SaveToCSV3()
         {
             StringBuilder csv = new StringBuilder();
-            //Append headers...
-            foreach(var row in datagrid.Items)
+            //TODO! Append headers...
+            
+            foreach (var row in datagrid.Items)
             {
                 var props = row.GetType().GetProperties();
                 foreach(var prop in props)
                 {
                     var value = prop.GetValue(row, null);
                     csv.Append(value);
-                    csv.Append(" ");
+                    csv.Append(";");
                 }
                 csv.AppendLine();
             }
@@ -408,12 +407,17 @@ namespace FifthSemester
         private void btnSaveAsCSV_Click(object sender, RoutedEventArgs e)
         {
             StringBuilder result = SaveToCSV3();
-            StreamWriter outputFile = new StreamWriter(path + @"\ToTxt.txt");
+            StreamWriter outputFile = new StreamWriter(path + @"\Output.csv");
             outputFile.WriteLine(result);
             outputFile.Close();
 
-            SaveToCSV3();
+
         }
     }
+
+    //string filename = "";
+    //SaveFileDialog sfd = new SaveFileDialog();
+    //sfd.Filter = "CSV (*.csv)|*.csv";
+    //    sfd.FileName = "Output.csv";
 }
  
