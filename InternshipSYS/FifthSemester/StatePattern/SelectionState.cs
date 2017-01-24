@@ -20,6 +20,7 @@ namespace FifthSemester.StatePattern
         }
         public abstract void SeasonChanged(int year, string season);
         public abstract void YearChanged(int year, string season);
+        //Key: Header, Value: Binding
         public abstract Dictionary<string, string> GetColumns();
         public abstract void SetItemsSource(int year, string season);
 

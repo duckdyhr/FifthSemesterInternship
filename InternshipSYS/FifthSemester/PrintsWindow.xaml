@@ -59,7 +59,7 @@
         </GroupBox>
 
         <GroupBox Header="Result" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
-            <DataGrid Name="datagrid" AutoGenerateColumns="False" IsEnabled="True" SelectionMode="Single" AlternatingRowBackground="lightGray" AlternationCount="2" Height="402">
+            <DataGrid Name="datagrid" AutoGenerateColumns="False" IsEnabled="True" SelectionMode="Extended" AlternatingRowBackground="lightGray" AlternationCount="2" Height="402">
                 <DataGrid.Columns>
                 </DataGrid.Columns>
                 <DataGrid.GroupStyle>
@@ -100,7 +100,6 @@
             <Label Name="lblTest" VerticalAlignment="Center" HorizontalAlignment="Left"/>
             <Button Name="btnSaveAsCSV" Content="Save as csv" Width="70" VerticalAlignment="Center" Click="btnSaveAsCSV_Click"/>
             <Button Name="btnSaveAsPdf" Content="Save as pdf" Width="70" VerticalAlignment="Center" Click="btnSaveAsPdf_Click"/>
-            <Button Name="btnPrint" Content="Print" Width="70" VerticalAlignment="Center" Click="btnPrint_Click" />
         </StackPanel>
     </Grid>
 </Window>

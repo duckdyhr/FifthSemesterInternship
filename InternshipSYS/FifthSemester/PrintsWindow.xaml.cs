@@ -28,7 +28,7 @@ namespace FifthSemester
     {
         private Service service;
 
-        //Base for the document's fonts
+        //Base for the pdf document's fonts
         private static readonly BaseFont font = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, false);
 
         //private Dictionary<string, string> currentGridColumns;
@@ -42,6 +42,7 @@ namespace FifthSemester
             "2 Students who have a company agreement", "3 Students who have EAAA listed as company",
             "4 Main project overview Secretary", "5 Companies with contacts" };
 
+        //All files created are saved to Desktop
         private static readonly string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
         public PrintsWindow()
@@ -171,7 +172,7 @@ namespace FifthSemester
             if (comboBxYear.SelectedIndex < 0)
             {
                 year = DateTime.Now.Year;
-                //Set current year selected in combobox as well
+                //Set current year as selected in combobox as well
             }
             else
             {
@@ -194,14 +195,11 @@ namespace FifthSemester
         private void btnSaveAsPdf_Click(object sender, RoutedEventArgs e)
         {
             //Document and PdfWriter are from iTextSharp import
-            Document doc = new Document(iTextSharp.text.PageSize.A4.Rotate(), 10, 10, 10, 10);
+            Document doc = new Document();
 
-            Font headingFont = new Font(font, 24, Font.NORMAL, BaseColor.RED);
+            Font headingFont = new Font(font, 26, Font.NORMAL);
             Font tableheadFont = new Font(font, 12, Font.BOLD);
-            Font tablecellFont = new Font(font, 12);
-
-            var columns = selectionState.GetColumns();
-            var data = datagrid.Items;
+            Font tablecellFont = new Font(font, 12, Font.NORMAL);
 
             PdfWriter writer = null;
             try
@@ -210,34 +208,38 @@ namespace FifthSemester
 
                 doc.Open();
 
+                iTextSharp.text.Paragraph heading = new iTextSharp.text.Paragraph("Printable List", headingFont);
+                
+                heading.Alignment = Element.ALIGN_CENTER;
+                heading.SpacingAfter = 10;
+                doc.Add(heading);
+                
+                PdfPTable table = new PdfPTable(selectionState.GetColumns().Count);
+                table.HorizontalAlignment = Element.ALIGN_LEFT;
+                table.WidthPercentage = 100;
 
-                iTextSharp.text.Paragraph paragHeading = new iTextSharp.text.Paragraph("Heading", headingFont);
-                doc.Add(paragHeading);
-                //List<Student> studentList = new List<Student>();
-                if (data != null)
-                {
-                    PdfPTable table = new PdfPTable(columns.Count);
-                    int[] widths = new int[] { 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 2 };
-                    table.SetWidths(widths);
-                    foreach(KeyValuePair<string, string> column in columns)
-                    {
-                        table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(column.Key, tableheadFont)));
-                    }
-                    
-                    foreach (var row in data)
-                    {
-                        //iTextSharp.text.Paragraph p = new iTextSharp.text.Paragraph(studentStringRepresentation(s) + "\n");
-                        //doc.Add(p);
-                        //table.AddCell(new PdfPCell(new iTextSharp.text.Paragraph(s.name, tablecellFont)));
-                    }
-                    doc.Add(table);
-                }
-                else
-                {
-                    //Give user a meaningful response as no students are selected...
+                var headers = selectionState.GetColumns().Keys;
+                var properties = selectionState.GetColumns().Values;
+
+                foreach (var header in headers){
+                    Phrase phrase = new Phrase(header, tableheadFont);
+                    table.AddCell(new PdfPCell(phrase));
                 }
 
-                lblTest.Content = "Saving to .pdf";
+                foreach (var row in datagrid.Items)
+                {
+                    foreach (var prop in properties)
+                    {
+                        Chunk chunk = new Chunk(row.GetType()?.GetProperty(prop)?.GetValue(row, null)?.ToString(), tablecellFont);
+                        Phrase phrase = new Phrase(chunk);
+                        PdfPCell cell = new PdfPCell(phrase);
+                        cell.Padding = 3;
+                        cell.Border = PdfPCell.LISTITEM;
+                        table.AddCell(cell);
+                    }
+                }
+                doc.Add(table);
+                lblTest.Content = "pdf file saved to desktop";
             }
             catch (DocumentException de)
             {
@@ -262,162 +264,34 @@ namespace FifthSemester
             return result;
         }
 
-        private void btnPrint_Click(object sender, RoutedEventArgs e)
+        private StringBuilder GenerateCSV()
         {
-            lblTest.Content = "Printing list ...";
-            PrintDialog pDialog = new PrintDialog();
-            // Display the dialog. This returns true if the user presses the Print button.
-            Nullable<Boolean> print = pDialog.ShowDialog();
-            //if (print == true)
-            //{
-            //    XpsDocument xpsDocument = new XpsDocument("C:\\FixedDocumentSequence.xps", FileAccess.ReadWrite);
-            //    FixedDocumentSequence fixedDocSeq = xpsDocument.GetFixedDocumentSequence();
-            //    pDialog.PrintDocument(fixedDocSeq.DocumentPaginator, "Test print job");
-            //}
-        }
+            var columns = selectionState.GetColumns();
+            var headers = columns.Keys;
+            var properties = columns.Values;
 
-        //Brug til comma separerert list!!
-        private void SaveToTxt()
-        {
-            //using (StreamWriter outputFile = new StreamWriter(path + @"\TestToTxt.txt"))
-            //{
-            //    outputFile.WriteLine("Testing to txt..");
-            //    if (studentList != null)
-            //    {
-            //        foreach (Student s in studentList)
-            //        {
-            //            outputFile.WriteLine(studentStringRepresentation(s));
-            //        }
-            //    }
-            //}
-            //lblTest.Content = "Saving to .txt...";
-            //Or:
-            //SaveFileDialog sfd = new SaveFileDialog();
-        }
-
-        private void SaveToCSV()
-        {
-            var csv = new StringBuilder();
-
-            var columns = datagrid.Columns;
-            csv.AppendLine(string.Join(",", columns.Select(column => "\"" + column.Header + "\"").ToArray()));
-            
-            //foreach (Type row in datagrid.Items)
-            //{
-            //    var cells = row.GetProperties();
-            //    csv.AppendLine(string.Join(",", cells.Select(cell => "\"" + cell.value() + "\"").ToArray()));
-            //}
-
-            lblTest.Content = csv;
-        }
-
-        static StringBuilder CreateCSV<T>(IEnumerable<T> data)
-        {
-            StringBuilder builder = new StringBuilder();
-            var properties = typeof(T).GetProperties();
-
-            foreach (var prop in properties)
-            {
-                builder.Append(prop.Name).Append(", ");
-            }
-
-            builder.Remove(builder.Length - 2, 2).AppendLine();
-
-            foreach (var row in data)
-            {
-                foreach (var prop in properties)
-                {
-                    builder.Append(prop.GetValue(row, null)).Append(", ");
-                }
-
-                builder.Remove(builder.Length - 2, 2).AppendLine();
-            }
-
-            return builder;
-        }
-
-        private void SaveToCSV2()
-        {
-            DataGrid dg = datagrid;
-            dg.SelectAllCells();
-            dg.ClipboardCopyMode = DataGridClipboardCopyMode.IncludeHeader;
-            ApplicationCommands.Copy.Execute(null, dg);
-            dg.UnselectAllCells();
-            String Clipboardresult = (string)Clipboard.GetData(DataFormats.CommaSeparatedValue);
-
-            StreamWriter outputFile = new StreamWriter(path + @"\ToTxt.txt");
-            outputFile.WriteLine(Clipboardresult);
-            outputFile.Close();
-        }
-
-        public void OnExportGridToCSV(object sender, System.EventArgs e)
-        {
-            //// Create the CSV file to which grid data will be exported.
-            //StreamWriter outputFile = new StreamWriter(path + @"\ToTxt.txt");
-            //// First we will write the headers.
-            //DataGrid dt = datagrid.Columns
-
-            //int iColCount = dt.Columns.Count;
-            //for (int i = 0; i < iColCount; i++)
-            //{
-            //    sw.Write(dt.Columns[i]);
-            //    if (i < iColCount - 1)
-            //    {
-            //        sw.Write(",");
-            //    }
-            //}
-            //sw.Write(sw.NewLine);
-            //// Now write all the rows.
-            //foreach (DataRow dr in dt.Rows)
-            //{
-            //    for (int i = 0; i < iColCount; i++)
-            //    {
-            //        if (!Convert.IsDBNull(dr[i]))
-            //        {
-            //            sw.Write(dr[i].ToString());
-            //        }
-            //        if (i < iColCount - 1)
-            //        {
-            //            sw.Write(System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator);
-            //        }
-            //    }
-            //    sw.Write(sw.NewLine);
-            //}
-            //outputFile.Close();
-        }
-
-        private StringBuilder SaveToCSV3()
-        {
-            StringBuilder csv = new StringBuilder();
-            //TODO! Append headers...
-            
+            StringBuilder data = new StringBuilder();
+            data.AppendLine(string.Join(";", headers));
             foreach (var row in datagrid.Items)
             {
-                var props = row.GetType().GetProperties();
-                foreach(var prop in props)
+                foreach(var prop in properties)
                 {
-                    var value = prop.GetValue(row, null);
-                    csv.Append(value);
-                    csv.Append(";");
+                    var value = row.GetType()?.GetProperty(prop)?.GetValue(row, null);
+                    data.Append(value);
+                    data.Append(";");
                 }
-                csv.AppendLine();
+                data.AppendLine();
             }
-            return csv;
+            return data;
         }
+
         private void btnSaveAsCSV_Click(object sender, RoutedEventArgs e)
         {
-            StringBuilder result = SaveToCSV3();
-            StreamWriter outputFile = new StreamWriter(path + @"\Output.csv");
+            StringBuilder result = GenerateCSV();
+            StreamWriter outputFile = new StreamWriter(path + @"\Output.csv", false, Encoding.Default);
             outputFile.WriteLine(result);
             outputFile.Close();
-
-
+            lblTest.Content = "csv file saved to desktop";
         }
     }
-
-    //string filename = "";
-    //SaveFileDialog sfd = new SaveFileDialog();
-    //sfd.Filter = "CSV (*.csv)|*.csv";
-    //    sfd.FileName = "Output.csv";
 }
- 
