@@ -38,41 +38,7 @@ namespace FifthSemester.StatePattern
         }
     }
 
-    //1: "Student company assignment"
-    public class StudentSupervisorCompanyState : SelectionState
-    {
-        private static readonly Dictionary<string, string> studentSupervisorColums = new Dictionary<string, string>() {
-            {"Name", "name" },
-            {"Class", "class" },
-            {"Supervisor", "Supervisor.name" },
-            {"Email", "email" },
-            {"Company", "Company.name" },
-            {"Comments", "comments" }
-        };
-
-        public StudentSupervisorCompanyState(PrintsWindow context) : base(context)
-        { }
-
-        public override Dictionary<string, string> GetColumns()
-        {
-            return studentSupervisorColums;
-        }
-
-        public override void SetItemsSource(int year, string season)
-        {
-            var list = GetStudentList(year, season);
-            context.datagrid.ItemsSource = list;
-        }
-
-        public override void YearChanged(int year, string season)
-        {
-            context.datagrid.ItemsSource = GetStudentList(year, season);
-        }
-        public override void SeasonChanged(int year, string season)
-        {
-            context.datagrid.ItemsSource = GetStudentList(year, season);
-        }
-    }
+    
 
     //0: "Student supervisor assignment"
     class StudentCompanyAssignmentState : SelectionState
@@ -106,9 +72,46 @@ namespace FifthSemester.StatePattern
         public override void YearChanged(int year, string season)
         {
             context.datagrid.ItemsSource = GetStudentList(year, season);
+            context.EnableComboBxSeason();
         }
     }
 
+    //1: "Student company assignment"
+    public class StudentSupervisorCompanyState : SelectionState
+    {
+        private static readonly Dictionary<string, string> studentSupervisorColums = new Dictionary<string, string>() {
+            {"Name", "name" },
+            {"Class", "class" },
+            {"Supervisor", "Supervisor.name" },
+            {"Email", "email" },
+            {"Company", "Company.name" },
+            {"Comments", "comments" }
+        };
+
+        public StudentSupervisorCompanyState(PrintsWindow context) : base(context)
+        { }
+
+        public override Dictionary<string, string> GetColumns()
+        {
+            return studentSupervisorColums;
+        }
+
+        public override void SetItemsSource(int year, string season)
+        {
+            var list = GetStudentList(year, season);
+            context.datagrid.ItemsSource = list;
+        }
+
+        public override void YearChanged(int year, string season)
+        {
+            context.datagrid.ItemsSource = GetStudentList(year, season);
+            context.EnableComboBxSeason();
+        }
+        public override void SeasonChanged(int year, string season)
+        {
+            context.datagrid.ItemsSource = GetStudentList(year, season);
+        }
+    }
     //2: "Students who has a company agreement"
     class StudentsAssignedCompanyState : SelectionState
     {
@@ -228,6 +231,7 @@ namespace FifthSemester.StatePattern
         public override void YearChanged(int year, string season)
         {
             SetItemsSource(year, season);
+            context.EnableComboBxSeason();
         }
         public override void SeasonChanged(int year, string season)
         {
@@ -243,6 +247,9 @@ namespace FifthSemester.StatePattern
             {"Zipcode", "zipcode" },
             {"City", "city" },
             {"Web site", "website" },
+            {"Contacts", "Contacts" },
+            {"Phone", "phone" },
+            {"Comments", "comments" }
         };
         public CompaniesWithContactState(PrintsWindow context) : base(context)
         {
@@ -255,16 +262,18 @@ namespace FifthSemester.StatePattern
 
         public override void SetItemsSource(int year, string season)
         {
-            throw new NotImplementedException();
+            var companies = context.GetService().getCompaniesList();
+            Company c = new Company();
+            context.datagrid.ItemsSource = companies;
         }
 
         public override void YearChanged(int year, string season)
         {
-            throw new NotImplementedException();
+            context.lblTest.Content = "Year changed";
         }
         public override void SeasonChanged(int year, string season)
         {
-            throw new NotImplementedException();
+            context.lblTest.Content = "Season changed";
         }
     }
 }

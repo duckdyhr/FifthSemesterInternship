@@ -440,7 +440,11 @@ namespace SERVICE
             s.season = season;
             submitChanges();
         }
-
+        private string studentStringRepresentation(Student s)
+        {
+            string result = s.name + " " + s.email + " " + s.phone + " " + s.application + " " + s.contract + " " + s.leaningobjectives + " " + s.address + " " + s.zipcode + " " + s.@class + " " + s.year + " " + s.season + " " + s.Company + " " + s.Supervisor;
+            return result;
+        }
         public void loadStudents(String fileName, String year, String strSeason)
         {
             String [] lines = File.ReadAllLines(fileName);

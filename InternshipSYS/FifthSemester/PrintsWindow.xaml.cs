@@ -38,9 +38,9 @@ namespace FifthSemester
 
         private SelectionState selectionState;
 
-        private static string[] selection = new string[] { "0 Student supervisor assignment", "1 Student company assignment",
-            "2 Students who have a company agreement", "3 Students who have EAAA listed as company",
-            "4 Main project overview Secretary", "5 Companies with contacts" };
+        private static string[] selection = new string[] { "Student supervisor assignment", "Student company assignment",
+            "Students who have a company agreement", "Students who have EAAA listed as company",
+            "Main project overview Secretary", "Companies" };
 
         //All files created are saved to Desktop
         private static readonly string path = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
@@ -64,9 +64,13 @@ namespace FifthSemester
             comboBxYear.ItemsSource = service.getYearList();
         }
 
+        public void EnableComboBxSeason()
+        {
+            comboBxSeason.IsEnabled = true;
+            comboBxSeason.Text = "Choose Season";
+        }
         private void comboBxYear_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
             if (comboBxYear.SelectedItem != null)
             {
                 int year = Int32.Parse(comboBxYear.SelectedItem.ToString());
@@ -77,8 +81,7 @@ namespace FifthSemester
                     season = season = (comboBxSeason.SelectedItem as ComboBoxItem).Content.ToString();
                 }
                 selectionState.YearChanged(year, season);
-                comboBxSeason.IsEnabled = true;
-                comboBxSeason.Text = "Choose Season";
+                //EnableComboBxSeason();
             }
         }
 
@@ -94,6 +97,7 @@ namespace FifthSemester
         
         private void comboBxSelection_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            comboBxSeason.IsEnabled = false;
             if (comboBxSelection.SelectedItem != null)
             {
                 //"Student supervisor Company "
@@ -103,6 +107,10 @@ namespace FifthSemester
                     SelectionChanged = true;
                     FillGrid();
                     comboBxYear.IsEnabled = true;
+                    if(comboBxYear.SelectedItem != null)
+                    {
+                        EnableComboBxSeason();
+                    }
                 }
                 //"Student company assignment"
                 else if (comboBxSelection.SelectedIndex == 1)
@@ -111,6 +119,10 @@ namespace FifthSemester
                     SelectionChanged = true;
                     FillGrid();
                     comboBxYear.IsEnabled = true;
+                    if (comboBxYear.SelectedItem != null)
+                    {
+                        EnableComboBxSeason();
+                    }
                 }
                 //"Students who has a company agreement"
                 else if (comboBxSelection.SelectedIndex == 2)
@@ -135,6 +147,10 @@ namespace FifthSemester
                     SelectionChanged = true;
                     FillGrid();
                     comboBxYear.IsEnabled = true;
+                    if (comboBxYear.SelectedItem != null)
+                    {
+                        EnableComboBxSeason();
+                    }
                 }
                 //"Companies with contacts"
                 else if (comboBxSelection.SelectedIndex == 5)
@@ -142,7 +158,7 @@ namespace FifthSemester
                     selectionState = new CompaniesWithContactState(this);
                     SelectionChanged = true;
                     FillGrid();
-                    comboBxYear.IsEnabled = true;
+                    comboBxYear.IsEnabled = false;
                 }
             }
         }
@@ -189,7 +205,7 @@ namespace FifthSemester
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            service.isStudentsWindowActive = false;
+            service.isPrintsWindowActive = false;
         }
 
         private void btnSaveAsPdf_Click(object sender, RoutedEventArgs e)
@@ -257,13 +273,7 @@ namespace FifthSemester
                 writer?.Close();
             }
         }
-
-        private string studentStringRepresentation(Student s)
-        {
-            string result = s.name + " " + s.email + " " + s.phone + " " + s.application + " " + s.contract + " " + s.leaningobjectives + " " + s.address + " " + s.zipcode + " " + s.@class + " " + s.year + " " + s.season + " " + s.Company + " " + s.Supervisor;
-            return result;
-        }
-
+        
         private StringBuilder GenerateCSV()
         {
             var columns = selectionState.GetColumns();

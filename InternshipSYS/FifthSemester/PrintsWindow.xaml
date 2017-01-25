@@ -59,7 +59,7 @@
         </GroupBox>
 
         <GroupBox Header="Result" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
-            <DataGrid Name="datagrid" AutoGenerateColumns="False" IsEnabled="True" SelectionMode="Extended" AlternatingRowBackground="lightGray" AlternationCount="2" Height="402">
+            <DataGrid Name="datagrid" IsReadOnly="True" AutoGenerateColumns="False" SelectionMode="Single" AlternatingRowBackground="lightGray" AlternationCount="2" Height="402">
                 <DataGrid.Columns>
                 </DataGrid.Columns>
                 <DataGrid.GroupStyle>
